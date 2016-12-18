@@ -67,6 +67,54 @@ Dependency
 
 `wmwm` depends on `wmctrl`, `xdotool` and `xprop`.
 
+Screenshots
+================================================
+
+.. image:: http://projects.cykerway.com/images/wmwm/cascade.png
+   :height: 180px
+   :width: 320px
+   :alt: cascade.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/hstack.png
+   :height: 180px
+   :width: 320px
+   :alt: hstack.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/vstack.png
+   :height: 180px
+   :width: 320px
+   :alt: vstack.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/bmain.png
+   :height: 180px
+   :width: 320px
+   :alt: bmain.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/lmain.png
+   :height: 180px
+   :width: 320px
+   :alt: lmain.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/rmain.png
+   :height: 180px
+   :width: 320px
+   :alt: rmain.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/tmain.png
+   :height: 180px
+   :width: 320px
+   :alt: tmain.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/rowgrid32.png
+   :height: 180px
+   :width: 320px
+   :alt: rowgrid32.png
+
+.. image:: http://projects.cykerway.com/images/wmwm/colgrid23.png
+   :height: 180px
+   :width: 320px
+   :alt: colgrid23.png
+
 License
 ================================================
 
