@@ -108,20 +108,27 @@ def downsize():
         line = line.strip()
         if not line:
             continue
-        m = RE_DESKTOP.match(line)
-        desktop = {
-            'num': int(m.group(1)),
-            'is_current': m.group(2) == '*',
-            'dg_w': int(m.group(3)),
-            'dg_h': int(m.group(4)),
-            'vp_x': int(m.group(5)),
-            'vp_y': int(m.group(6)),
-            'wa_x': int(m.group(7)),
-            'wa_y': int(m.group(8)),
-            'wa_w': int(m.group(9)),
-            'wa_h': int(m.group(10)),
-            'windows': {},
-        }
+        if '*' in line:
+            m = RE_DESKTOP.match(line)
+            desktop = {
+                'num': int(m.group(1)),
+                'is_current': m.group(2) == '*',
+                'dg_w': int(m.group(3)),
+                'dg_h': int(m.group(4)),
+                'vp_x': int(m.group(5)),
+                'vp_y': int(m.group(6)),
+                'wa_x': int(m.group(7)),
+                'wa_y': int(m.group(8)),
+                'wa_w': int(m.group(9)),
+                'wa_h': int(m.group(10)),
+                'windows': {},
+            }
+        else:
+            desktop = {
+                'num': int(line.split()[0]),
+                'is_current': False,
+                'windows': {},
+            }
         desktopz[desktop['num']] = desktop
 
     # Get windows.
@@ -189,20 +196,27 @@ def get_desktops():
         line = line.strip()
         if not line:
             continue
-        m = RE_DESKTOP.match(line)
-        desktop = {
-            'num': int(m.group(1)),
-            'is_current': m.group(2) == '*',
-            'dg_w': int(m.group(3)),
-            'dg_h': int(m.group(4)),
-            'vp_x': int(m.group(5)),
-            'vp_y': int(m.group(6)),
-            'wa_x': int(m.group(7)),
-            'wa_y': int(m.group(8)),
-            'wa_w': int(m.group(9)),
-            'wa_h': int(m.group(10)),
-            'windows': {},
-        }
+        if '*' in line:
+            m = RE_DESKTOP.match(line)
+            desktop = {
+                'num': int(m.group(1)),
+                'is_current': m.group(2) == '*',
+                'dg_w': int(m.group(3)),
+                'dg_h': int(m.group(4)),
+                'vp_x': int(m.group(5)),
+                'vp_y': int(m.group(6)),
+                'wa_x': int(m.group(7)),
+                'wa_y': int(m.group(8)),
+                'wa_w': int(m.group(9)),
+                'wa_h': int(m.group(10)),
+                'windows': {},
+            }
+        else:
+            desktop = {
+                'num': int(line.split()[0]),
+                'is_current': False,
+                'windows': {},
+            }
         desktopz[desktop['num']] = desktop
 
     # Get windows.
