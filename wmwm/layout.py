@@ -39,9 +39,25 @@ def set_window(id_, x, y, w, h):
     None
         None.
     '''
+    # Handle window decoration offsets.
+    l, r, t, b = 0, 0, 0, 0
+    lines = subprocess.check_output([
+        'xprop','-id', str(id_),
+    ]).decode().split('\n')
+    for line in lines:
+        line = line.strip()
+        if line.startswith('_NET_FRAME_EXTENTS'):
+            l, r, t, b = [int(x) for x in line.split('=')[1].split(',')]
+            break
+
+    # Move and resize window.
     subprocess.check_call([
-        'wmctrl', '-ir', str(id_), '-e', '0,{},{},{},{}'.format(x, y, w, h),
+        'wmctrl',
+        '-ir', str(id_),
+        '-e', '0,{},{},{},{}'.format(x, y, w - l - r, h - t - b),
     ])
+
+    # Activate window.
     activate_window(id_)
 
 def _order_windows(windows, active_window):
