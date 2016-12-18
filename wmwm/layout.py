@@ -99,6 +99,8 @@ def cascade(desktop, active_window):
     x, y, w, h = xstep, ystep, nwin * xstep, nwin * ystep
     for window in _order_windows(windows, active_window):
         set_window(window['id'], x, y, w, h)
+        if len(windows) == 1:
+            break
         x += (ngrid - 2 - nwin) * xstep // (len(windows) - 1)
         y += (ngrid - 2 - nwin) * ystep // (len(windows) - 1)
     hide_desktop()
