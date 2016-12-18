@@ -45,7 +45,7 @@ method may be WM-specific. Some notable examples are:
 -   In a plain X window system, you can use `xbindkeys` to configure keyboard
     shortcuts. `xbindkeys` features a tool `xbindkeys_config` for GUI config.
 
--   Please consult manuals for other window managers.
+Please consult manuals for other window managers.
 
 Install
 ================================================
