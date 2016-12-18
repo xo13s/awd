@@ -9,7 +9,7 @@ wmwm
 Intro
 ================================================
 
-`wmwm` stands for *Wacky Manager of Window Manager*. `wmwm` accepts a layout
+`wmwm` stands for **Wacky Manager of Window Manager**. `wmwm` accepts a layout
 argument from user and then drives the window manager to lay windows in that
 layout pattern. If the result looks funny, you should laugh.
 
@@ -36,6 +36,17 @@ Available layouts:
     colgrid22, colgrid23, colgrid24, colgrid32, colgrid33, colgrid34, colgrid42,
     colgrid43, colgrid44.
 
+Optionally, you can bind the call to `wmwm` to a keyboard shortcut. The binding
+method may be WM-specific. Some notable examples are:
+
+-   In `compiz`, you can configure keyboard shortcuts with `ccsm` in menu
+    `General -> Commands`.
+
+-   In a plain X window system, you can use `xbindkeys` to configure keyboard
+    shortcuts. `xbindkeys` features a tool `xbindkeys_config` for GUI config.
+
+-   Please consult manuals for other window managers.
+
 Install
 ================================================
 
@@ -54,7 +65,7 @@ To install from source, run:
 Dependency
 ================================================
 
-`wmwm` depends on `wmctrl` and `xdotool`.
+`wmwm` depends on `wmctrl`, `xdotool` and `xprop`.
 
 License
 ================================================
