@@ -41,14 +41,12 @@ def set_window(id_, x, y, w, h):
     '''
     # Handle window decoration offsets.
     l, r, t, b = 0, 0, 0, 0
-    lines = subprocess.check_output([
-        'xprop','-id', str(id_),
-    ]).decode().split('\n')
-    for line in lines:
-        line = line.strip()
-        if line.startswith('_NET_FRAME_EXTENTS'):
-            l, r, t, b = [int(x) for x in line.split('=')[1].split(',')]
-            break
+    line = subprocess.check_output([
+        'xprop', '-id', str(id_), '_NET_FRAME_EXTENTS',
+    ]).decode()
+    line = line.strip()
+    if line.startswith('_NET_FRAME_EXTENTS'):
+        l, r, t, b = [int(x) for x in line.split('=')[1].split(',')]
 
     # Move and resize window.
     subprocess.check_call([
