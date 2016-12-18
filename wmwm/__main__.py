@@ -59,9 +59,15 @@ USAGE_TEXT = '''
 Usage: wmwm [options] <layout>
 
 Available layouts:
-    cascade     Cascade windows.
-    htile       Tile windows horizontally.
-    vtile       Tile windows vertically.
+    cascade             Cascade windows
+    hstack              Stack windows horizontally
+    vstack              Stack windows vertically
+    bmain               Main window on the bottom
+    lmain               Main window on the left
+    rmain               Main window on the right
+    tmain               Main window on the top
+    rowgrid[x][y]       Row-major grid layout (2 <= x, y <= 4)
+    colgrid[x][y]       Col-major grid layout (2 <= x, y <= 4)
 '''
 
 # Desktop regex.
