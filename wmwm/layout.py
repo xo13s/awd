@@ -89,6 +89,7 @@ def _move_resize_window(window, x, y, w, h):
     # Move and resize window. WM will take care of the location, so we just need
     # to take care of the size.
     move_resize_window(window, x, y, w - l - r, h - t - b)
+    logger.d(['move_resize_window', x, y, w - l - r, h - t - b])
 
 def cascade(windows, active_window):
     '''
