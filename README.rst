@@ -67,7 +67,13 @@ To install from source, run:
 Dependency
 ================================================
 
-`wmwm` depends on `python-xlib` and `ewmh`. Both can be installed via `pip`.
+`wmwm` depends on `python-xlib` and `ewmh`.
+
+To install them, run:
+
+::
+
+    pip install python-xlib ewmh
 
 Troubleshooting
 ================================================
