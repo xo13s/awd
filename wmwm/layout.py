@@ -66,7 +66,29 @@ def _move_resize_window(window, x, y, w, h):
     None
         None.
     '''
-    move_resize_window(window, x, y, w, h)
+    # Find top window.
+    top = window
+    while True:
+        resp = top.query_tree()
+        if top == resp.root or resp.parent == resp.root:
+            break
+        top = resp.parent
+
+    # Get left and top offsets.
+    resp = top.translate_coords(window, 0, 0)
+    l = resp.x
+    t = resp.y
+
+    # Get right and bottom offsets.
+    win_geo = window.get_geometry()
+    top_geo = top.get_geometry()
+    logger.w(['win_geo', win_geo])
+    logger.w(['top_geo', top_geo])
+    r = top_geo.width - win_geo.width - l
+    b = top_geo.height - win_geo.height - t
+
+    # Move and resize window so that its outer size matches the given size.
+    move_resize_window(window, x, y, w - l - r, h - t - b)
 
 def cascade(windows, active_window):
     '''
