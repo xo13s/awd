@@ -4,6 +4,9 @@
 
 import sys
 
+from wmwm.api import get_desktop_geometry
+from wmwm.logger import logger
+
 def printout(s):
     '''
     Print to stdout and flush.
@@ -22,25 +25,37 @@ def is_window_in_viewport(window, viewport):
 
     Parameters
     ----------
-    window : dict
-        A window object having fields: x, y, w, h.
-    viewport : dict
-        A viewport object having fields: x, y, w, h.
+    window : object
+        A window object.
+    viewport : list
+        A viewport.
 
     Returns
     -------
     bool
         True iff window is in viewport.
     '''
-    wl = window['x']
-    wt = window['y']
-    wr = window['x'] + window['w']
-    wb = window['y'] + window['h']
+    # Get window geometry.
+    win_geo = window.get_geometry()
+    # Get root window.
+    root = win_geo.root
+    # Translate coords (window -> root).
+    win_in_root_geo = root.translate_coords(window, win_geo.x, win_geo.y)
 
-    vl = viewport['x']
-    vt = viewport['y']
-    vr = viewport['x'] + viewport['w']
-    vb = viewport['y'] + viewport['h']
+    wl = win_in_root_geo.x
+    wt = win_in_root_geo.y
+    wr = win_in_root_geo.x + win_geo.width
+    wb = win_in_root_geo.y + win_geo.height
+    logger.d([wl, wt, wr - wl, wb - wt])
+
+    # Get root geometry.
+    root_geo = root.get_geometry()
+
+    vl = viewport[0]
+    vt = viewport[1]
+    vr = viewport[0] + root_geo.width
+    vb = viewport[1] + root_geo.height
+    logger.d([vl, vt, vr - vl, vb - vt])
 
     return not (wl > vr or wt > vb or wr < vl or wb < vt)
 
