@@ -92,9 +92,9 @@ def layout_windows(windows, layout, active_window):
     '''
     LAYOUT_HANDLERZ[layout](windows, active_window)
 
-def run():
+def _main():
     '''
-    Run function.
+    Actual main function.
     '''
     # Parse args.
     layout = parse_args()
@@ -127,12 +127,11 @@ def run():
 
 def main():
     '''
-    Main function.
+    Main function wrapper.
     '''
     try:
-        run()
+        _main()
     except Exception as e:
-        raise e
         usage()
         sys.exit(1)
 

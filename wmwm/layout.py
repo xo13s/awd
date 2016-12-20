@@ -10,7 +10,9 @@ To implement a new layout, define a new layout handler and add it to
 `LAYOUT_HANDLERZ`.
 '''
 
-from wmwm.api import *
+from wmwm.api import get_workarea
+from wmwm.api import move_resize_window
+from wmwm.api import set_active_window
 from wmwm.logger import logger
 
 def _order_windows(windows, active_window):

@@ -2,7 +2,6 @@
 
 '''Xlib/EWMH API module.'''
 
-from Xlib import Xatom
 from Xlib.display import Display
 from ewmh import EWMH
 
