@@ -141,174 +141,142 @@ def vstack(windows, active_window):
         move_resize_window(window, x, y, w, h)
         y += h
 
-#def vstack(desktop, active_window):
-#    '''
-#    Stack windows vertically.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#    x, y, w, h = 0, 0, desktop['wa_w'], desktop['wa_h'] // len(windows)
-#    for window in _order_windows(windows, active_window):
-#        set_window(window['id'], x, y, w, h)
-#        y += h
-#    hide_desktop()
-#
-#def tmain(desktop, active_window):
-#    '''
-#    Two-row layout, top row is main row.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#
-#    # Process the active window.
-#    width = desktop['wa_w']
-#    height = desktop['wa_h'] // 2
-#    set_window(active_window, 0, 0, width, height)
-#
-#    # Process the rest.
-#    if len(windows) > 1:
-#        x, y, w, h = 0, height, width // (len(windows) - 1), height
-#        for i, window in enumerate(_order_windows(windows, active_window)):
-#            if i == len(windows) - 1:
-#                break
-#            set_window(window['id'], x, y, w, h)
-#            x += w
-#
-#    hide_desktop()
-#
-#def bmain(desktop, active_window):
-#    '''
-#    Two-row layout, bottom row is main row.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#
-#    # Process the active window.
-#    width = desktop['wa_w']
-#    height = desktop['wa_h'] // 2
-#    set_window(active_window, 0, height, width, height)
-#
-#    # Process the rest.
-#    if len(windows) > 1:
-#        x, y, w, h = 0, 0, width // (len(windows) - 1), height
-#        for i, window in enumerate(_order_windows(windows, active_window)):
-#            if i == len(windows) - 1:
-#                break
-#            set_window(window['id'], x, y, w, h)
-#            x += w
-#
-#    hide_desktop()
-#def lmain(desktop, active_window):
-#    '''
-#    Two-column layout, left column is main column.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#
-#    # Process the active window.
-#    width = desktop['wa_w'] // 2
-#    height = desktop['wa_h']
-#    set_window(active_window, 0, 0, width, height)
-#
-#    # Process the rest.
-#    if len(windows) > 1:
-#        x, y, w, h = width, 0, width, height // (len(windows) - 1)
-#        for i, window in enumerate(_order_windows(windows, active_window)):
-#            if i == len(windows) - 1:
-#                break
-#            set_window(window['id'], x, y, w, h)
-#            y += h
-#
-#    hide_desktop()
-#
-#def rmain(desktop, active_window):
-#    '''
-#    Two-column layout, right column is main column.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#
-#    # Process the active window.
-#    width = desktop['wa_w'] // 2
-#    height = desktop['wa_h']
-#    set_window(active_window, width, 0, width, height)
-#
-#    # Process the rest.
-#    if len(windows) > 1:
-#        x, y, w, h = 0, 0, width, height // (len(windows) - 1)
-#        for i, window in enumerate(_order_windows(windows, active_window)):
-#            if i == len(windows) - 1:
-#                break
-#            set_window(window['id'], x, y, w, h)
-#            y += h
-#
-#    hide_desktop()
-#
+def tmain(windows, active_window):
+    '''
+    Two-row layout, top row is main row.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    # Process the active window.
+    workarea = get_workarea()
+    width = workarea[2]
+    height = workarea[3] // 2
+    move_resize_window(active_window, 0, 0, width, height)
+
+    # Process the rest.
+    if len(windows) > 1:
+        x, y, w, h = 0, height, width // (len(windows) - 1), height
+        for i, window in enumerate(_order_windows(windows, active_window)):
+            if i == len(windows) - 1:
+                break
+            move_resize_window(window, x, y, w, h)
+            x += w
+
+def bmain(windows, active_window):
+    '''
+    Two-row layout, bottom row is main row.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    # Process the active window.
+    workarea = get_workarea()
+    width = workarea[2]
+    height = workarea[3] // 2
+    move_resize_window(active_window, 0, height, width, height)
+
+    # Process the rest.
+    if len(windows) > 1:
+        x, y, w, h = 0, 0, width // (len(windows) - 1), height
+        for i, window in enumerate(_order_windows(windows, active_window)):
+            if i == len(windows) - 1:
+                break
+            move_resize_window(window, x, y, w, h)
+            x += w
+
+def lmain(windows, active_window):
+    '''
+    Two-col layout, left col is main col.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    # Process the active window.
+    workarea = get_workarea()
+    width = workarea[2] // 2
+    height = workarea[3]
+    move_resize_window(active_window, 0, 0, width, height)
+
+    # Process the rest.
+    if len(windows) > 1:
+        x, y, w, h = width, 0, width, height // (len(windows) - 1)
+        for i, window in enumerate(_order_windows(windows, active_window)):
+            if i == len(windows) - 1:
+                break
+            move_resize_window(window, x, y, w, h)
+            y += h
+
+def rmain(windows, active_window):
+    '''
+    Two-col layout, right col is main col.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    # Process the active window.
+    workarea = get_workarea()
+    width = workarea[2] // 2
+    height = workarea[3]
+    move_resize_window(active_window, width, 0, width, height)
+
+    # Process the rest.
+    if len(windows) > 1:
+        x, y, w, h = 0, 0, width, height // (len(windows) - 1)
+        for i, window in enumerate(_order_windows(windows, active_window)):
+            if i == len(windows) - 1:
+                break
+            move_resize_window(window, x, y, w, h)
+            y += h
+
 #def _rowgrid(desktop, active_window, nrows, ncols):
 #    '''
 #    Grid layout, row-major.
@@ -426,10 +394,10 @@ LAYOUT_HANDLERZ = {
     'cascade': cascade,
     'hstack': hstack,
     'vstack': vstack,
-#    'bmain': bmain,
-#    'lmain': lmain,
-#    'rmain': rmain,
-#    'tmain': tmain,
+    'bmain': bmain,
+    'lmain': lmain,
+    'rmain': rmain,
+    'tmain': tmain,
 #    'rowgrid22': rowgrid22,
 #    'rowgrid23': rowgrid23,
 #    'rowgrid24': rowgrid24,
