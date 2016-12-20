@@ -5,15 +5,18 @@ A wacky manager of window manager.
 '''
 
 import argparse
-import subprocess
 import sys
 
-from wmwm.api import *
+from wmwm.api import get_active_window
+from wmwm.api import get_current_desktop
+from wmwm.api import get_desktop_viewport
+from wmwm.api import get_windows
+from wmwm.api import get_wm_desktop
+from wmwm.api import set_active_window
 from wmwm.layout import LAYOUT_HANDLERZ
 from wmwm.logger import logger
 from wmwm.util import is_window_in_viewport
 from wmwm.util import printerr
-from wmwm.util import printout
 
 USAGE_TEXT = '''
 Usage: wmwm [options] <layout>

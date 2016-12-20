@@ -4,7 +4,6 @@
 
 import sys
 
-from wmwm.api import get_desktop_geometry
 from wmwm.logger import logger
 
 def printout(s):

@@ -1,8 +1,6 @@
 #!/usr/bin/python
 
-'''Low-level API module.'''
-
-import subprocess
+'''Xlib/EWMH API module.'''
 
 from Xlib import Xatom
 from Xlib.display import Display
@@ -182,31 +180,3 @@ def move_resize_window(window, x, y, w, h):
     window.configure(x=x, y=y, width=w, height=h)
     disp.flush()
 
-############################
-
-def hide_desktop():
-    '''
-    Turn off *show desktop*.
-
-    Hiding desktop actually means showing windows.
-    '''
-    subprocess.check_call([
-        'wmctrl', '-k', 'off',
-    ])
-
-def set_window_size(id_, w, h):
-    '''
-    Set window size.
-
-    Parameters
-    ----------
-    id_ : int
-        Window ID.
-    w : int
-        Window width.
-    h : int
-        Window height.
-    '''
-    subprocess.check_call([
-        'xdotool', 'windowsize', str(id_), str(w), str(h),
-    ])

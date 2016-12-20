@@ -10,11 +10,8 @@ To implement a new layout, define a new layout handler and add it to
 `LAYOUT_HANDLERZ`.
 '''
 
-import subprocess
-
 from wmwm.api import *
 from wmwm.logger import logger
-from wmwm.util import printerr
 
 def _order_windows(windows, active_window):
     '''
