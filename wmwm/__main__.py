@@ -87,7 +87,7 @@ def layout_windows(windows, layout, active_window):
     active_window : object
         The active window object.
     '''
-    pass
+    LAYOUT_HANDLERZ[layout](windows, active_window)
 
 def run():
     '''

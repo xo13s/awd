@@ -8,9 +8,6 @@ from Xlib import Xatom
 from Xlib.display import Display
 from ewmh import EWMH
 
-# Maximum property value length (in bytes).
-MAX_PROPERTY_VALUE_LEN = 4096
-
 # Display object.
 disp = None
 
@@ -112,6 +109,18 @@ def get_active_window():
     ewmh = _get_ewmh()
     return ewmh.getActiveWindow()
 
+def get_workarea():
+    '''
+    Get the work area.
+
+    Returns
+    -------
+    list
+        The work area [x, y, w, h].
+    '''
+    ewmh = _get_ewmh()
+    return list(ewmh.getWorkArea())
+
 def get_wm_desktop(window):
     '''
     Get the desktop the window is in.
@@ -149,33 +158,6 @@ def set_active_window(window):
 
 ############################
 
-def activate_window(id_):
-    '''
-    Activate window.
-
-    Parameters
-    ----------
-    id_
-        Window ID.
-    '''
-    subprocess.check_call([
-        'xdotool', 'windowactivate', str(id_),
-    ])
-
-def get_display_geometry():
-    '''
-    Get display geometry.
-
-    Returns
-    -------
-    list
-        Display geometry '[w, h]'.
-    '''
-    line = subprocess.check_output([
-        'xdotool', 'getdisplaygeometry',
-    ]).decode().strip()
-    return [int(x) for x in line.split()]
-
 def hide_desktop():
     '''
     Turn off *show desktop*.
@@ -185,64 +167,6 @@ def hide_desktop():
     subprocess.check_call([
         'wmctrl', '-k', 'off',
     ])
-
-def set_fullscreen(id_, op):
-    '''
-    Add/Remove/Toggle fullscreen property of a window.
-
-    Parameters
-    ----------
-    id_ : int
-        Window ID.
-    op : str
-        Operation: 'on', 'off' or 'toggle'.
-    '''
-    if op == 'on':
-        op = 'add'
-    elif op == 'off':
-        op = 'remove'
-    elif op == 'toggle':
-        op = 'toggle'
-    else:
-        raise Exception('invalid operation {}'.format(op))
-
-    subprocess.check_call([
-        'wmctrl',
-        '-ir', str(id_),
-        '-b', '{},fullscreen'.format(op),
-    ])
-
-def set_maximized(id_, op):
-    '''
-    Add/Remove/Toggle maximized property of a window.
-
-    Parameters
-    ----------
-    id_ : int
-        Window ID.
-    op : str
-        Operation: 'on', 'off' or 'toggle'.
-    '''
-    if op == 'on':
-        op = 'add'
-    elif op == 'off':
-        op = 'remove'
-    elif op == 'toggle':
-        op = 'toggle'
-    else:
-        raise Exception('invalid operation {}'.format(op))
-
-    subprocess.check_call([
-        'wmctrl',
-        '-ir', str(id_),
-        '-b', '{},maximized_horz,maximized_vert'.format(op),
-    ])
-
-def get_window_size(id_):
-    '''
-    Get window width and height.
-    '''
-    pass
 
 def set_window_size(id_, w, h):
     '''
