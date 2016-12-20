@@ -40,39 +40,42 @@ def _order_windows(windows, active_window):
         ans.append(tmp)
     return ans
 
-#def cascade(desktop, active_window):
-#    '''
-#    Cascade windows.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    ngrid = 16  # Magic: Number of grids on each axis.
-#    nwin = 10   # Magic: Number of grids a window occupies on each axis.
-#
-#    dp_w, dp_h = get_display_geometry()
-#    xstep, ystep = dp_w // ngrid, dp_h // ngrid
-#
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#    x, y, w, h = xstep, ystep, nwin * xstep, nwin * ystep
-#    for window in _order_windows(windows, active_window):
-#        set_window(window['id'], x, y, w, h)
-#        if len(windows) == 1:
-#            break
-#        x += (ngrid - 2 - nwin) * xstep // (len(windows) - 1)
-#        y += (ngrid - 2 - nwin) * ystep // (len(windows) - 1)
-#    hide_desktop()
+def cascade(windows, active_window):
+    '''
+    Cascade windows.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    # Get work area.
+    workarea = get_workarea()
+
+    ngrid = 16  # Magic: Number of grids on each axis.
+    nwin = 10   # Magic: Number of grids a window occupies on each axis.
+
+    xstep, ystep = workarea[2] // ngrid, workarea[3] // ngrid
+
+    x, y, w, h = xstep, ystep, nwin * xstep, nwin * ystep
+    for window in _order_windows(windows, active_window):
+        logger.d([window, x, y, w, h])
+        move_resize_window(window, x, y, w, h)
+        set_active_window(window)
+        if len(windows) == 1:
+            break
+        x += (ngrid - 2 - nwin) * xstep // (len(windows) - 1)
+        y += (ngrid - 2 - nwin) * ystep // (len(windows) - 1)
 
 def hstack(windows, active_window):
     '''
@@ -420,7 +423,7 @@ def vstack(windows, active_window):
 
 # Layout handlers.
 LAYOUT_HANDLERZ = {
-#    'cascade': cascade,
+    'cascade': cascade,
     'hstack': hstack,
     'vstack': vstack,
 #    'bmain': bmain,
