@@ -13,7 +13,7 @@ Intro
 argument from user and then drives the window manager to lay windows in that
 layout pattern. If the result looks funny, you should laugh.
 
-`wmwm` is not a windows manager but a manager of window manager. Since `wmwm` is
+`wmwm` is not a window manager but a manager of window manager. Since `wmwm` is
 not a window manager, you don't have to replace your current window manager to
 use `wmwm`. `wmwm` works with any X window manager that is EWMH_-compatible.
 
