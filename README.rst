@@ -65,7 +65,7 @@ To install from source, run:
 Dependency
 ================================================
 
-`wmwm` depends on `wmctrl`, `xdotool` and `xprop`.
+`wmwm` depends on `python-xlib` and `ewmh`. Both can be installed via `pip`.
 
 Screenshots
 ================================================
