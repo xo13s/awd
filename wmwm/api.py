@@ -156,6 +156,32 @@ def set_active_window(window):
     ewmh.setActiveWindow(window)
     ewmh.display.flush()
 
+def move_resize_window(window, x, y, w, h):
+    '''
+    Changes the size and location of the specified window.
+
+    Parameters
+    ----------
+    window
+        A window object.
+    x
+        X coord.
+    y
+        Y coord.
+    w
+        Width.
+    h
+        Height.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    disp = _get_display()
+    window.configure(x=x, y=y, width=w, height=h)
+    disp.flush()
+
 ############################
 
 def hide_desktop():

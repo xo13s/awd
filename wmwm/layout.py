@@ -16,47 +16,6 @@ from wmwm.api import *
 from wmwm.logger import logger
 from wmwm.util import printerr
 
-def set_window(id_, x, y, w, h):
-    '''
-    Set window position and size.
-
-    Parameters
-    ----------
-    id_
-        Window ID.
-    x
-        x coord.
-    y
-        y coord.
-    w
-        Width.
-    h
-        Height.
-
-    Returns
-    -------
-    None
-        None.
-    '''
-    # Handle window decoration offsets.
-    l, r, t, b = 0, 0, 0, 0
-    line = subprocess.check_output([
-        'xprop', '-id', str(id_), '_NET_FRAME_EXTENTS',
-    ]).decode()
-    line = line.strip()
-    if line.startswith('_NET_FRAME_EXTENTS'):
-        l, r, t, b = [int(x) for x in line.split('=')[1].split(',')]
-
-    # Move and resize window.
-    subprocess.check_call([
-        'wmctrl',
-        '-ir', str(id_),
-        '-e', '0,{},{},{},{}'.format(x, y, w - l - r, h - t - b),
-    ])
-
-    # Activate window.
-    activate_window(id_)
-
 def _order_windows(windows, active_window):
     '''
     Order windows. Active window comes last.
@@ -146,9 +105,41 @@ def hstack(windows, active_window):
     h = workarea[3]
 
     for window in _order_windows(windows, active_window):
-        logger.w((window, x, y, w, h))
-#        set_window(window['id'], x, y, w, h)
+        logger.d([window, x, y, w, h])
+        move_resize_window(window, x, y, w, h)
         x += w
+
+def vstack(windows, active_window):
+    '''
+    Stack windows vertically.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    # Get work area.
+    workarea = get_workarea()
+
+    x = workarea[0]
+    y = workarea[1]
+    w = workarea[2]
+    h = workarea[3] // len(windows)
+
+    for window in _order_windows(windows, active_window):
+        logger.d([window, x, y, w, h])
+        move_resize_window(window, x, y, w, h)
+        y += h
 
 #def vstack(desktop, active_window):
 #    '''
@@ -434,7 +425,7 @@ def hstack(windows, active_window):
 LAYOUT_HANDLERZ = {
 #    'cascade': cascade,
     'hstack': hstack,
-#    'vstack': vstack,
+    'vstack': vstack,
 #    'bmain': bmain,
 #    'lmain': lmain,
 #    'rmain': rmain,
