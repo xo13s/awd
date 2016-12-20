@@ -14,6 +14,7 @@ from wmwm.api import get_windows
 from wmwm.api import get_wm_desktop
 from wmwm.api import set_active_window
 from wmwm.layout import LAYOUT_HANDLERZ
+from wmwm.logger import LOGLEVELZ
 from wmwm.logger import logger
 from wmwm.util import is_window_in_viewport
 from wmwm.util import printerr
@@ -42,13 +43,22 @@ def usage():
 def parse_args():
     '''
     Parse arguments.
+
+    Returns
+    -------
+    argparse.Namespace
+        An object holding options and arguments as attributes.
     '''
     parser = argparse.ArgumentParser()
+    parser.add_argument('--loglevel',
+                        choices=LOGLEVELZ.values(),
+                        default='info',
+                        help='log level')
     parser.add_argument('layout',
                         choices=LAYOUT_HANDLERZ.keys(),
-                        help='layout')
+                        help='layout name')
     args = parser.parse_args()
-    return args.layout
+    return args
 
 def filter_windows(windows, desktop, viewport):
     '''
@@ -97,27 +107,32 @@ def _main():
     Actual main function.
     '''
     # Parse args.
-    layout = parse_args()
+    args = parse_args()
+    loglevel = args.loglevel
+    layout = args.layout
+
+    # Set log level.
+    logger.setLevel({v: k for k, v in LOGLEVELZ.items()}[loglevel])
 
     # Get all windows managed by WM.
     windows = get_windows()
-    logger.d('all windows', windows)
+    logger.d('all windows %s', windows)
 
     # Get current active window.
     active_window = get_active_window()
-    logger.d('active_window', active_window)
+    logger.d('active_window %s', active_window)
 
     # Get current desktop.
     desktop = get_current_desktop()
-    logger.d('current desktop', desktop)
+    logger.d('current desktop %s', desktop)
 
     # Get current viewport.
     viewport = get_desktop_viewport()
-    logger.d('current viewport', viewport)
+    logger.d('current viewport %s', viewport)
 
     # Filter windows by desktop and viewport.
     windows = filter_windows(windows, desktop, viewport)
-    logger.d('filtered windows', windows)
+    logger.d('filtered windows %s', windows)
 
     # Layout windows.
     layout_windows(windows, layout, active_window)
@@ -132,6 +147,7 @@ def main():
     try:
         _main()
     except Exception as e:
+        printerr(e)
         usage()
         sys.exit(1)
 
