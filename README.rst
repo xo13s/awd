@@ -69,6 +69,32 @@ Dependency
 
 `wmwm` depends on `python-xlib` and `ewmh`. Both can be installed via `pip`.
 
+Troubleshooting
+================================================
+
+Enable debug mode
+------------------------------------------------
+
+Enable debug mode to dump window information:
+
+::
+
+    wmwm --loglevel debug <layout>
+
+Hide all desktop icons
+------------------------------------------------
+
+Some file managers manage the desktop by adding a window containing icons. The
+desktop can be disabled with either of these two commands:
+
+::
+
+    dconf write /org/gnome/desktop/background/show-desktop-icons false
+
+::
+
+    gsettings set org.gnome.background show-desktop-icons false
+
 Screenshots
 ================================================
 
