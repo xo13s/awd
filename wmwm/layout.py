@@ -42,6 +42,32 @@ def _order_windows(windows, active_window):
         ans.append(tmp)
     return ans
 
+def _move_resize_window(window, x, y, w, h):
+    '''
+    Changes the size and location of the specified window.
+
+    This function takes border width into account.
+
+    Parameters
+    ----------
+    window
+        A window object.
+    x
+        X coord.
+    y
+        Y coord.
+    w
+        Width.
+    h
+        Height.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    move_resize_window(window, x, y, w, h)
+
 def cascade(windows, active_window):
     '''
     Cascade windows.
@@ -72,7 +98,7 @@ def cascade(windows, active_window):
     x, y, w, h = xstep, ystep, nwin * xstep, nwin * ystep
     for window in _order_windows(windows, active_window):
         logger.d([window, x, y, w, h])
-        move_resize_window(window, x, y, w, h)
+        _move_resize_window(window, x, y, w, h)
         set_active_window(window)
         if len(windows) == 1:
             break
@@ -108,7 +134,7 @@ def hstack(windows, active_window):
 
     for window in _order_windows(windows, active_window):
         logger.d([window, x, y, w, h])
-        move_resize_window(window, x, y, w, h)
+        _move_resize_window(window, x, y, w, h)
         x += w
 
 def vstack(windows, active_window):
@@ -140,7 +166,7 @@ def vstack(windows, active_window):
 
     for window in _order_windows(windows, active_window):
         logger.d([window, x, y, w, h])
-        move_resize_window(window, x, y, w, h)
+        _move_resize_window(window, x, y, w, h)
         y += h
 
 def tmain(windows, active_window):
@@ -166,7 +192,7 @@ def tmain(windows, active_window):
     workarea = get_workarea()
     width = workarea[2]
     height = workarea[3] // 2
-    move_resize_window(active_window, 0, 0, width, height)
+    _move_resize_window(active_window, 0, 0, width, height)
 
     # Process the rest.
     if len(windows) > 1:
@@ -174,7 +200,7 @@ def tmain(windows, active_window):
         for i, window in enumerate(_order_windows(windows, active_window)):
             if i == len(windows) - 1:
                 break
-            move_resize_window(window, x, y, w, h)
+            _move_resize_window(window, x, y, w, h)
             x += w
 
 def bmain(windows, active_window):
@@ -200,7 +226,7 @@ def bmain(windows, active_window):
     workarea = get_workarea()
     width = workarea[2]
     height = workarea[3] // 2
-    move_resize_window(active_window, 0, height, width, height)
+    _move_resize_window(active_window, 0, height, width, height)
 
     # Process the rest.
     if len(windows) > 1:
@@ -208,7 +234,7 @@ def bmain(windows, active_window):
         for i, window in enumerate(_order_windows(windows, active_window)):
             if i == len(windows) - 1:
                 break
-            move_resize_window(window, x, y, w, h)
+            _move_resize_window(window, x, y, w, h)
             x += w
 
 def lmain(windows, active_window):
@@ -234,7 +260,7 @@ def lmain(windows, active_window):
     workarea = get_workarea()
     width = workarea[2] // 2
     height = workarea[3]
-    move_resize_window(active_window, 0, 0, width, height)
+    _move_resize_window(active_window, 0, 0, width, height)
 
     # Process the rest.
     if len(windows) > 1:
@@ -242,7 +268,7 @@ def lmain(windows, active_window):
         for i, window in enumerate(_order_windows(windows, active_window)):
             if i == len(windows) - 1:
                 break
-            move_resize_window(window, x, y, w, h)
+            _move_resize_window(window, x, y, w, h)
             y += h
 
 def rmain(windows, active_window):
@@ -268,7 +294,7 @@ def rmain(windows, active_window):
     workarea = get_workarea()
     width = workarea[2] // 2
     height = workarea[3]
-    move_resize_window(active_window, width, 0, width, height)
+    _move_resize_window(active_window, width, 0, width, height)
 
     # Process the rest.
     if len(windows) > 1:
@@ -276,7 +302,7 @@ def rmain(windows, active_window):
         for i, window in enumerate(_order_windows(windows, active_window)):
             if i == len(windows) - 1:
                 break
-            move_resize_window(window, x, y, w, h)
+            _move_resize_window(window, x, y, w, h)
             y += h
 
 def _rowgrid(windows, active_window, nrows, ncols):
@@ -313,7 +339,7 @@ def _rowgrid(windows, active_window, nrows, ncols):
         y, x = divmod(i % (nrows * ncols), ncols)
         x *= width
         y *= height
-        move_resize_window(window, x, y, w, h)
+        _move_resize_window(window, x, y, w, h)
 
 def rowgrid22(desktop, active_window):
     return _rowgrid(desktop, active_window, 2, 2)
@@ -368,7 +394,7 @@ def _colgrid(windows, active_window, nrows, ncols):
         x, y = divmod(i % (nrows * ncols), nrows)
         x *= width
         y *= height
-        move_resize_window(window, x, y, w, h)
+        _move_resize_window(window, x, y, w, h)
 
 def colgrid22(desktop, active_window):
     return _colgrid(desktop, active_window, 2, 2)
