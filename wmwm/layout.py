@@ -277,117 +277,115 @@ def rmain(windows, active_window):
             move_resize_window(window, x, y, w, h)
             y += h
 
-#def _rowgrid(desktop, active_window, nrows, ncols):
-#    '''
-#    Grid layout, row-major.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#    nrows:
-#        Number of rows.
-#    ncols:
-#        Number of cols.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#
-#    if nrows * ncols < len(windows):
-#        printerr('Warning: Not enough space. Windows may overlap.')
-#
-#    width = desktop['wa_w'] // ncols
-#    height = desktop['wa_h'] // nrows
-#    x, y, w, h = 0, 0, width, height
-#    for i, window in enumerate(_order_windows(windows, active_window)):
-#        y, x = divmod(i % (nrows * ncols), ncols)
-#        x *= width
-#        y *= height
-#        set_window(window['id'], x, y, w, h)
-#    hide_desktop()
-#
-#def rowgrid22(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 2, 2)
-#def rowgrid23(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 2, 3)
-#def rowgrid24(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 2, 4)
-#def rowgrid32(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 3, 2)
-#def rowgrid33(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 3, 3)
-#def rowgrid34(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 3, 4)
-#def rowgrid42(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 4, 2)
-#def rowgrid43(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 4, 3)
-#def rowgrid44(desktop, active_window):
-#    return _rowgrid(desktop, active_window, 4, 4)
-#
-#def _colgrid(desktop, active_window, nrows, ncols):
-#    '''
-#    Grid layout, col-major.
-#
-#    Parameters
-#    ----------
-#    desktop : dict
-#        A desktop object.
-#    active_window : int
-#        Active window ID.
-#    nrows:
-#        Number of rows.
-#    ncols:
-#        Number of cols.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    windows = desktop['windows']
-#    if len(windows) == 0:
-#        return
-#
-#    if nrows * ncols < len(windows):
-#        printerr('Warning: Not enough space. Windows may overlap.')
-#
-#    width = desktop['wa_w'] // ncols
-#    height = desktop['wa_h'] // nrows
-#    x, y, w, h = 0, 0, width, height
-#    for i, window in enumerate(_order_windows(windows, active_window)):
-#        x, y = divmod(i % (nrows * ncols), nrows)
-#        x *= width
-#        y *= height
-#        set_window(window['id'], x, y, w, h)
-#    hide_desktop()
-#
-#def colgrid22(desktop, active_window):
-#    return _colgrid(desktop, active_window, 2, 2)
-#def colgrid23(desktop, active_window):
-#    return _colgrid(desktop, active_window, 2, 3)
-#def colgrid24(desktop, active_window):
-#    return _colgrid(desktop, active_window, 2, 4)
-#def colgrid32(desktop, active_window):
-#    return _colgrid(desktop, active_window, 3, 2)
-#def colgrid33(desktop, active_window):
-#    return _colgrid(desktop, active_window, 3, 3)
-#def colgrid34(desktop, active_window):
-#    return _colgrid(desktop, active_window, 3, 4)
-#def colgrid42(desktop, active_window):
-#    return _colgrid(desktop, active_window, 4, 2)
-#def colgrid43(desktop, active_window):
-#    return _colgrid(desktop, active_window, 4, 3)
-#def colgrid44(desktop, active_window):
-#    return _colgrid(desktop, active_window, 4, 4)
+def _rowgrid(windows, active_window, nrows, ncols):
+    '''
+    Grid layout, row-major.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+    nrows:
+        Number of rows.
+    ncols:
+        Number of cols.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    if nrows * ncols < len(windows):
+        logger.w('Warning: Not enough space. Windows may overlap.')
+
+    workarea = get_workarea()
+    width = workarea[2] // ncols
+    height = workarea[3] // nrows
+    x, y, w, h = 0, 0, width, height
+    for i, window in enumerate(_order_windows(windows, active_window)):
+        y, x = divmod(i % (nrows * ncols), ncols)
+        x *= width
+        y *= height
+        move_resize_window(window, x, y, w, h)
+
+def rowgrid22(desktop, active_window):
+    return _rowgrid(desktop, active_window, 2, 2)
+def rowgrid23(desktop, active_window):
+    return _rowgrid(desktop, active_window, 2, 3)
+def rowgrid24(desktop, active_window):
+    return _rowgrid(desktop, active_window, 2, 4)
+def rowgrid32(desktop, active_window):
+    return _rowgrid(desktop, active_window, 3, 2)
+def rowgrid33(desktop, active_window):
+    return _rowgrid(desktop, active_window, 3, 3)
+def rowgrid34(desktop, active_window):
+    return _rowgrid(desktop, active_window, 3, 4)
+def rowgrid42(desktop, active_window):
+    return _rowgrid(desktop, active_window, 4, 2)
+def rowgrid43(desktop, active_window):
+    return _rowgrid(desktop, active_window, 4, 3)
+def rowgrid44(desktop, active_window):
+    return _rowgrid(desktop, active_window, 4, 4)
+
+def _colgrid(windows, active_window, nrows, ncols):
+    '''
+    Grid layout, col-major.
+
+    Parameters
+    ----------
+    windows : list
+        A list of window objects.
+    active_window : object
+        The active window object.
+    nrows:
+        Number of rows.
+    ncols:
+        Number of cols.
+
+    Returns
+    -------
+    None
+        None.
+    '''
+    if len(windows) == 0:
+        return
+
+    if nrows * ncols < len(windows):
+        logger.w('Warning: Not enough space. Windows may overlap.')
+
+    workarea = get_workarea()
+    width = workarea[2] // ncols
+    height = workarea[3] // nrows
+    x, y, w, h = 0, 0, width, height
+    for i, window in enumerate(_order_windows(windows, active_window)):
+        x, y = divmod(i % (nrows * ncols), nrows)
+        x *= width
+        y *= height
+        move_resize_window(window, x, y, w, h)
+
+def colgrid22(desktop, active_window):
+    return _colgrid(desktop, active_window, 2, 2)
+def colgrid23(desktop, active_window):
+    return _colgrid(desktop, active_window, 2, 3)
+def colgrid24(desktop, active_window):
+    return _colgrid(desktop, active_window, 2, 4)
+def colgrid32(desktop, active_window):
+    return _colgrid(desktop, active_window, 3, 2)
+def colgrid33(desktop, active_window):
+    return _colgrid(desktop, active_window, 3, 3)
+def colgrid34(desktop, active_window):
+    return _colgrid(desktop, active_window, 3, 4)
+def colgrid42(desktop, active_window):
+    return _colgrid(desktop, active_window, 4, 2)
+def colgrid43(desktop, active_window):
+    return _colgrid(desktop, active_window, 4, 3)
+def colgrid44(desktop, active_window):
+    return _colgrid(desktop, active_window, 4, 4)
 
 # Layout handlers.
 LAYOUT_HANDLERZ = {
@@ -398,22 +396,22 @@ LAYOUT_HANDLERZ = {
     'lmain': lmain,
     'rmain': rmain,
     'tmain': tmain,
-#    'rowgrid22': rowgrid22,
-#    'rowgrid23': rowgrid23,
-#    'rowgrid24': rowgrid24,
-#    'rowgrid32': rowgrid32,
-#    'rowgrid33': rowgrid33,
-#    'rowgrid34': rowgrid34,
-#    'rowgrid42': rowgrid42,
-#    'rowgrid43': rowgrid43,
-#    'rowgrid44': rowgrid44,
-#    'colgrid22': colgrid22,
-#    'colgrid23': colgrid23,
-#    'colgrid24': colgrid24,
-#    'colgrid32': colgrid32,
-#    'colgrid33': colgrid33,
-#    'colgrid34': colgrid34,
-#    'colgrid42': colgrid42,
-#    'colgrid43': colgrid43,
-#    'colgrid44': colgrid44,
+    'rowgrid22': rowgrid22,
+    'rowgrid23': rowgrid23,
+    'rowgrid24': rowgrid24,
+    'rowgrid32': rowgrid32,
+    'rowgrid33': rowgrid33,
+    'rowgrid34': rowgrid34,
+    'rowgrid42': rowgrid42,
+    'rowgrid43': rowgrid43,
+    'rowgrid44': rowgrid44,
+    'colgrid22': colgrid22,
+    'colgrid23': colgrid23,
+    'colgrid24': colgrid24,
+    'colgrid32': colgrid32,
+    'colgrid33': colgrid33,
+    'colgrid34': colgrid34,
+    'colgrid42': colgrid42,
+    'colgrid43': colgrid43,
+    'colgrid44': colgrid44,
 }
