@@ -74,20 +74,20 @@ def _move_resize_window(window, x, y, w, h):
             break
         top = resp.parent
 
-    # Get left and top offsets.
+    # Get left and top offsets. This is done by translating coord (0, 0) in the
+    # given window to the top window.
     resp = top.translate_coords(window, 0, 0)
     l = resp.x
     t = resp.y
 
-    # Get right and bottom offsets.
+    # Get right and bottom offsets. This is done by computing size difference.
     win_geo = window.get_geometry()
     top_geo = top.get_geometry()
-    logger.w(['win_geo', win_geo])
-    logger.w(['top_geo', top_geo])
     r = top_geo.width - win_geo.width - l
     b = top_geo.height - win_geo.height - t
 
-    # Move and resize window so that its outer size matches the given size.
+    # Move and resize window. WM will take care of the location, so we just need
+    # to take care of the size.
     move_resize_window(window, x, y, w - l - r, h - t - b)
 
 def cascade(windows, active_window):
