@@ -36,17 +36,18 @@ Usage
       -h, --help            show this help message and exit
       --loglevel <loglevel>
                             log level
+      --exclude <exclude>   exclude window names matching pattern
 
     available layouts:
-        cascade             Cascade windows
-        hstack              Stack windows horizontally
-        vstack              Stack windows vertically
-        bmain               Main window on the bottom
-        lmain               Main window on the left
-        rmain               Main window on the right
-        tmain               Main window on the top
-        rowgrid[x][y]       Row-major grid layout (2 <= x, y <= 4)
-        colgrid[x][y]       Col-major grid layout (2 <= x, y <= 4)
+        cascade             cascade windows
+        hstack              stack windows horizontally
+        vstack              stack windows vertically
+        bmain               main window on the bottom
+        lmain               main window on the left
+        rmain               main window on the right
+        tmain               main window on the top
+        rowgrid[x][y]       row-major grid layout (2 <= x, y <= 4)
+        colgrid[x][y]       col-major grid layout (2 <= x, y <= 4)
 
 Shortcuts
 ------------------------------------------------
@@ -114,6 +115,19 @@ desktop can be disabled with either of these two commands:
 ::
 
     gsettings set org.gnome.background show-desktop-icons false
+
+Hide windows by names
+------------------------------------------------
+
+If there are windows that `wmwm` doesn't handle properly, they can be excluded:
+
+::
+
+    wmwm --exclude <name> <layout>
+
+Window names matching `name` won't be handled by `wmwm`.
+
+Multiple `--exclude` options are supported.
 
 Screenshots
 ================================================

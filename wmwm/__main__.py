@@ -32,15 +32,15 @@ USAGE = '''\
 
 EPILOG = '''\
 available layouts:
-    cascade             Cascade windows
-    hstack              Stack windows horizontally
-    vstack              Stack windows vertically
-    bmain               Main window on the bottom
-    lmain               Main window on the left
-    rmain               Main window on the right
-    tmain               Main window on the top
-    rowgrid[x][y]       Row-major grid layout (2 <= x, y <= 4)
-    colgrid[x][y]       Col-major grid layout (2 <= x, y <= 4)
+    cascade             cascade windows
+    hstack              stack windows horizontally
+    vstack              stack windows vertically
+    bmain               main window on the bottom
+    lmain               main window on the left
+    rmain               main window on the right
+    tmain               main window on the top
+    rowgrid[x][y]       row-major grid layout (2 <= x, y <= 4)
+    colgrid[x][y]       col-major grid layout (2 <= x, y <= 4)
 '''
 
 def parse_args():
