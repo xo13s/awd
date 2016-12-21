@@ -7,11 +7,14 @@ A wacky manager of window manager.
 import argparse
 import sys
 
+from traceback import print_exc
+
 from wmwm.api import get_active_window
 from wmwm.api import get_current_desktop
 from wmwm.api import get_desktop_viewport
 from wmwm.api import get_windows
 from wmwm.api import get_wm_desktop
+from wmwm.api import get_wm_name
 from wmwm.api import set_active_window
 from wmwm.layout import LAYOUT_HANDLERZ
 from wmwm.logger import LOGLEVELZ
@@ -60,6 +63,11 @@ def parse_args():
                         default='info',
                         metavar='<loglevel>',
                         help='log level')
+    parser.add_argument('--exclude',
+                        action='append',
+                        default=[],
+                        metavar='<exclude>',
+                        help='exclude window names matching pattern')
     parser.add_argument('layout',
                         choices=LAYOUT_HANDLERZ.keys(),
                         metavar='<layout>',
@@ -67,7 +75,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def filter_windows(windows, desktop, viewport):
+def filter_windows(windows, desktop, viewport, excludes):
     '''
     Filter out windows which are not in the desktop or not in the viewport.
 
@@ -79,6 +87,8 @@ def filter_windows(windows, desktop, viewport):
         A desktop number.
     viewport : list
         A viewport.
+    excludes : list
+        A list of window name exclude patterns.
 
     Returns
     -------
@@ -87,10 +97,20 @@ def filter_windows(windows, desktop, viewport):
     '''
     ans = []
     for window in windows:
+
+        # Filter by desktop.
         if get_wm_desktop(window) != desktop:
             continue
+
+        # Filter by viewport.
         if not is_window_in_viewport(window, viewport):
             continue
+
+        # Filter by window name.
+        wm_name = get_wm_name(window)
+        if any([x in wm_name for x in excludes]):
+            continue
+
         ans.append(window)
     return ans
 
@@ -117,6 +137,7 @@ def _main():
     args = parse_args()
     loglevel = args.loglevel
     layout = args.layout
+    exclude = args.exclude
 
     # Set log level.
     logger.setLevel({v: k for k, v in LOGLEVELZ.items()}[loglevel])
@@ -138,7 +159,7 @@ def _main():
     logger.d('current viewport %s', viewport)
 
     # Filter windows by desktop and viewport.
-    windows = filter_windows(windows, desktop, viewport)
+    windows = filter_windows(windows, desktop, viewport, exclude)
     logger.d('filtered windows %s', windows)
 
     # Layout windows.
@@ -154,7 +175,7 @@ def main():
     try:
         _main()
     except Exception as e:
-        printerr(e)
+        print_exc(e)
         sys.exit(1)
 
 if __name__ == '__main__':

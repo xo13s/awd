@@ -118,13 +118,30 @@ def get_workarea():
     ewmh = _get_ewmh()
     return list(ewmh.getWorkArea())
 
+def get_wm_name(window):
+    '''
+    Get name of the window.
+
+    Parameters
+    ----------
+    window : object
+        A window object.
+
+    Returns
+    -------
+    str
+        Name of the window.
+    '''
+    ewmh = _get_ewmh()
+    return ewmh.getWmName(window).decode()
+
 def get_wm_desktop(window):
     '''
     Get the desktop the window is in.
 
     Parameters
     ----------
-    object
+    window : object
         A window object.
 
     Returns
