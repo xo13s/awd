@@ -19,10 +19,16 @@ from wmwm.logger import logger
 from wmwm.util import is_window_in_viewport
 from wmwm.util import printerr
 
-USAGE_TEXT = '''
-Usage: wmwm [options] <layout>
+DESCRIPTION = '''\
+A wacky manager of window manager.
+'''
 
-Available layouts:
+USAGE = '''\
+%(prog)s [options] <args>
+'''
+
+EPILOG = '''\
+available layouts:
     cascade             Cascade windows
     hstack              Stack windows horizontally
     vstack              Stack windows vertically
@@ -34,12 +40,6 @@ Available layouts:
     colgrid[x][y]       Col-major grid layout (2 <= x, y <= 4)
 '''
 
-def usage():
-    '''
-    Usage function.
-    '''
-    printerr(USAGE_TEXT)
-
 def parse_args():
     '''
     Parse arguments.
@@ -49,13 +49,20 @@ def parse_args():
     argparse.Namespace
         An object holding options and arguments as attributes.
     '''
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=DESCRIPTION,
+        usage=USAGE,
+        epilog=EPILOG,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument('--loglevel',
                         choices=LOGLEVELZ.values(),
                         default='info',
+                        metavar='<loglevel>',
                         help='log level')
     parser.add_argument('layout',
                         choices=LAYOUT_HANDLERZ.keys(),
+                        metavar='<layout>',
                         help='layout name')
     args = parser.parse_args()
     return args
@@ -148,7 +155,6 @@ def main():
         _main()
     except Exception as e:
         printerr(e)
-        usage()
         sys.exit(1)
 
 if __name__ == '__main__':
