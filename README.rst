@@ -17,37 +17,51 @@ layout pattern. If the result looks funny, you should laugh.
 not a window manager, you don't have to replace your current window manager to
 use `wmwm`. `wmwm` works with any X window manager that is EWMH_-compatible.
 
+`wmwm` will layout all windows, excluding maximized and fullscreen ones, in the
+current viewport.
+
 Usage
 ================================================
 
-`wmwm` is very easy to use. Simply call it with the layout name on the command
-line:
-
 ::
 
-    wmwm <layout>
+    usage: wmwm [options] <args>
 
-And it will arrange all the windows in the current viewport.
+    A wacky manager of window manager.
 
-Available layouts:
+    positional arguments:
+      <layout>              layout name
 
-::
+    optional arguments:
+      -h, --help            show this help message and exit
+      --loglevel <loglevel>
+                            log level
 
-    cascade, hstack, vstack, bmain, lmain, rmain, tmain, rowgrid22, rowgrid23,
-    rowgrid24, rowgrid32, rowgrid33, rowgrid34, rowgrid42, rowgrid43, rowgrid44,
-    colgrid22, colgrid23, colgrid24, colgrid32, colgrid33, colgrid34, colgrid42,
-    colgrid43, colgrid44.
+    available layouts:
+        cascade             Cascade windows
+        hstack              Stack windows horizontally
+        vstack              Stack windows vertically
+        bmain               Main window on the bottom
+        lmain               Main window on the left
+        rmain               Main window on the right
+        tmain               Main window on the top
+        rowgrid[x][y]       Row-major grid layout (2 <= x, y <= 4)
+        colgrid[x][y]       Col-major grid layout (2 <= x, y <= 4)
 
-Optionally, you can bind the call to `wmwm` to a keyboard shortcut. The binding
-method may be WM-specific. Some notable examples are:
+Shortcuts
+------------------------------------------------
 
--   In `compiz`, you can configure keyboard shortcuts with `ccsm` in menu
+Optionally, you can bind `wmwm` to a keyboard shortcut. The binding method may
+be WM-specific. Some notable examples are:
+
+-   In `compiz`, you can configure keyboard shortcuts with `ccsm` in menu item
     `General -> Commands`.
 
 -   In a plain X window system, you can use `xbindkeys` to configure keyboard
-    shortcuts. `xbindkeys` features a tool `xbindkeys_config` for GUI config.
+    shortcuts. `xbindkeys` features a tool `xbindkeys_config` for easy GUI
+    configuration.
 
-Please consult manuals for other window managers.
+For other window managers, please consult their manuals.
 
 Install
 ================================================
