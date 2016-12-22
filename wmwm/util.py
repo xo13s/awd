@@ -43,18 +43,16 @@ def is_window_in_viewport(window, viewport):
 
     wl = win_in_root_geo.x
     wt = win_in_root_geo.y
-    wr = win_in_root_geo.x + win_geo.width
-    wb = win_in_root_geo.y + win_geo.height
-    logger.d([wl, wt, wr - wl, wb - wt])
+    wr = win_in_root_geo.x + win_geo.width - 1
+    wb = win_in_root_geo.y + win_geo.height - 1
 
     # Get root geometry.
     root_geo = root.get_geometry()
 
     vl = viewport[0]
     vt = viewport[1]
-    vr = viewport[0] + root_geo.width
-    vb = viewport[1] + root_geo.height
-    logger.d([vl, vt, vr - vl, vb - vt])
+    vr = viewport[0] + root_geo.width - 1
+    vb = viewport[1] + root_geo.height - 1
 
     return not (wl > vr or wt > vb or wr < vl or wb < vt)
 
