@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 '''
 Layout module.
@@ -10,10 +10,10 @@ To implement a new layout, define a new layout handler and add it to
 `LAYOUT_HANDLERZ`.
 '''
 
-from wmwm.api import get_workarea
-from wmwm.api import move_resize_window
-from wmwm.api import set_active_window
-from wmwm.logger import logger
+from awd.api import get_workarea
+from awd.api import move_resize_window
+from awd.api import set_active_window
+import awd.logging_better as log
 
 def _order_windows(windows, active_window):
     '''
@@ -89,7 +89,7 @@ def _move_resize_window(window, x, y, w, h):
     # Move and resize window. WM will take care of the location, so we just need
     # to take care of the size.
     move_resize_window(window, x, y, w - l - r, h - t - b)
-    logger.d(['move_resize_window', x, y, w - l - r, h - t - b])
+    log.d(['move_resize_window', x, y, w - l - r, h - t - b])
 
 def cascade(windows, active_window):
     '''
@@ -120,7 +120,7 @@ def cascade(windows, active_window):
 
     x, y, w, h = xstep, ystep, nwin * xstep, nwin * ystep
     for window in _order_windows(windows, active_window):
-        logger.d([window, x, y, w, h])
+        log.d([window, x, y, w, h])
         _move_resize_window(window, x, y, w, h)
         set_active_window(window)
         if len(windows) == 1:
@@ -156,7 +156,7 @@ def hstack(windows, active_window):
     h = workarea[3]
 
     for window in _order_windows(windows, active_window):
-        logger.d([window, x, y, w, h])
+        log.d([window, x, y, w, h])
         _move_resize_window(window, x, y, w, h)
         x += w
 
@@ -188,7 +188,7 @@ def vstack(windows, active_window):
     h = workarea[3] // len(windows)
 
     for window in _order_windows(windows, active_window):
-        logger.d([window, x, y, w, h])
+        log.d([window, x, y, w, h])
         _move_resize_window(window, x, y, w, h)
         y += h
 
@@ -352,7 +352,7 @@ def _rowgrid(windows, active_window, nrows, ncols):
         return
 
     if nrows * ncols < len(windows):
-        logger.w('Warning: Not enough space. Windows may overlap.')
+        log.w('Warning: Not enough space. Windows may overlap.')
 
     workarea = get_workarea()
     width = workarea[2] // ncols
@@ -407,7 +407,7 @@ def _colgrid(windows, active_window, nrows, ncols):
         return
 
     if nrows * ncols < len(windows):
-        logger.w('Warning: Not enough space. Windows may overlap.')
+        log.w('Warning: Not enough space. Windows may overlap.')
 
     workarea = get_workarea()
     width = workarea[2] // ncols

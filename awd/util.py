@@ -1,10 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
-'''Utility module.'''
+'''utility module;'''
 
 import sys
 
-from wmwm.logger import logger
+def die(s):
+
+    '''
+    print an error message and exit;
+    '''
+
+    print('error: ' + s, file=sys.stderr)
+    sys.exit(1)
 
 def printout(s):
     '''
