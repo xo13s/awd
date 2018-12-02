@@ -87,7 +87,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         prog=prog,
         description='a window director;',
-        formatter_class=argparse_better.HelpFormatter,
+        formatter_class=argparse_ext.HelpFormatter,
         add_help=False,
     )
 
