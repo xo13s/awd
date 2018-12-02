@@ -16,10 +16,10 @@ from awd.api import get_desktop_viewport
 from awd.api import get_windows
 from awd.api import get_wm_desktop
 from awd.api import get_wm_name
+from awd.api import layout_windows
 from awd.api import set_active_window
 from awd.util import die
 from awd.util import is_window_in_viewport
-from awd.util import printerr
 
 ##  program name;
 prog = 'awd'
@@ -187,14 +187,34 @@ def main():
 
     ##  parse args;
     args = parse_args()
-    print(args)
-    sys.exit()
 
-    layout = args.layout
-    exclude = args.exclude
+    ##  set log level;
+    logging.basicConfg()
 
-    # Set log level.
     logger.setLevel({v: k for k, v in LOGLEVELZ.items()}[loglevel])
+
+    ##  get layout;
+    if args.cascade:
+        layout = 'cascade'
+    elif args.horizontal:
+        layout = 'horizontal'
+    elif args.vertical:
+        layout = 'vertical'
+    elif args.left:
+        layout = 'left'
+    elif args.right:
+        layout = 'right'
+    elif args.top:
+        layout = 'top'
+    elif args.bottom:
+        layout = 'bottom'
+    elif args.grid:
+        layout = 'grid'
+    else:
+        raise
+
+    ##  get exclude pattern;
+    exclude = args.exclude
 
     # Get all windows managed by WM.
     windows = get_windows()
@@ -217,7 +237,7 @@ def main():
     logger.d('filtered windows %s', windows)
 
     # Layout windows.
-    layout_windows(windows, layout, active_window)
+    layout_windows(windows, layout_name, active_window)
 
     # Activate the original active window.
     set_active_window(active_window)

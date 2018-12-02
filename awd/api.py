@@ -196,3 +196,19 @@ def move_resize_window(window, x, y, w, h):
     window.configure(x=x, y=y, width=w, height=h)
     disp.flush()
 
+def layout_windows(windows, layout, win_active):
+
+    '''
+    layout windows;
+    '''
+
+    pass
+
+def filter_windows(windows, exclude):
+
+    '''
+    filter windows;
+    '''
+
+    pass
+

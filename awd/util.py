@@ -13,18 +13,6 @@ def die(s):
     print('error: ' + s, file=sys.stderr)
     sys.exit(1)
 
-def printout(s):
-    '''
-    Print to stdout and flush.
-    '''
-    print(s, file=sys.stdout, flush=True)
-
-def printerr(s):
-    '''
-    Print to stderr and flush.
-    '''
-    print(s, file=sys.stderr, flush=True)
-
 def is_window_in_viewport(window, viewport):
     '''
     Check whether window is in viewport.
