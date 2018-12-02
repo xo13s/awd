@@ -188,10 +188,9 @@ def main():
     ##  parse args;
     args = parse_args()
 
-    ##  set log level;
-    logging.basicConfig()
-
-    logger.setLevel({v: k for k, v in LOGLEVELZ.items()}[loglevel])
+    ##  enable debug mode;
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
 
     ##  get layout;
     if args.cascade:
@@ -211,36 +210,36 @@ def main():
     elif args.grid:
         layout = 'grid'
     else:
-        raise
+        die('no window layout;')
 
     ##  get exclude pattern;
     exclude = args.exclude
 
-    # Get all windows managed by WM.
-    windows = get_windows()
-    logger.d('all windows %s', windows)
-
-    # Get current active window.
-    active_window = get_active_window()
-    logger.d('active_window %s', active_window)
-
-    # Get current desktop.
-    desktop = get_current_desktop()
-    logger.d('current desktop %s', desktop)
-
-    # Get current viewport.
-    viewport = get_desktop_viewport()
-    logger.d('current viewport %s', viewport)
-
-    # Filter windows by desktop and viewport.
-    windows = filter_windows(windows, desktop, viewport, exclude)
-    logger.d('filtered windows %s', windows)
-
-    # Layout windows.
-    layout_windows(windows, layout_name, active_window)
-
-    # Activate the original active window.
-    set_active_window(active_window)
+#    # Get all windows managed by WM.
+#    windows = get_windows()
+#    logger.d('all windows %s', windows)
+#
+#    # Get current active window.
+#    active_window = get_active_window()
+#    logger.d('active_window %s', active_window)
+#
+#    # Get current desktop.
+#    desktop = get_current_desktop()
+#    logger.d('current desktop %s', desktop)
+#
+#    # Get current viewport.
+#    viewport = get_desktop_viewport()
+#    logger.d('current viewport %s', viewport)
+#
+#    # Filter windows by desktop and viewport.
+#    windows = filter_windows(windows, desktop, viewport, exclude)
+#    logger.d('filtered windows %s', windows)
+#
+#    # Layout windows.
+#    layout_windows(windows, layout_name, active_window)
+#
+#    # Activate the original active window.
+#    set_active_window(active_window)
 
 if __name__ == '__main__':
     main()
