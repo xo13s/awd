@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-'''Xlib/EWMH API module.'''
+'''xlib/ewmh api module;'''
 
 from Xlib.display import Display
 from ewmh import EWMH
