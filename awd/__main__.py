@@ -189,7 +189,7 @@ def main():
     args = parse_args()
 
     ##  set log level;
-    logging.basicConfg()
+    logging.basicConfig()
 
     logger.setLevel({v: k for k, v in LOGLEVELZ.items()}[loglevel])
 
