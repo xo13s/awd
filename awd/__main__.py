@@ -4,11 +4,11 @@
 A wacky manager of window manager.
 '''
 
-import argparse
-import argparse_better
-import sys
-
 from traceback import print_exc
+import argparse
+import argparse_ext
+import logging_ext as logging
+import sys
 
 from awd.api import get_active_window
 from awd.api import get_current_desktop

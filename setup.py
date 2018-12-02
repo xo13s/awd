@@ -172,7 +172,9 @@ setup(
     ##  will be installed by pip when this project is installed;
     ##
     install_requires=[
+        'argparse-ext',
         'ewmh',
+        'logging-ext',
         'python-xlib',
     ],
 
