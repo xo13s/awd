@@ -17,18 +17,12 @@ from awd.api import get_windows
 from awd.api import get_wm_desktop
 from awd.api import get_wm_name
 from awd.api import set_active_window
+from awd.util import die
 from awd.util import is_window_in_viewport
 from awd.util import printerr
-from awd.util import die
 
 ##  program name;
 prog = 'awd'
-
-epilog = '''\
-available layouts:
-    rowgrid[x][y]       row-major grid layout (2 <= x, y <= 4)
-    colgrid[x][y]       col-major grid layout (2 <= x, y <= 4)
-'''
 
 def filter_windows(windows, desktop, viewport, excludes):
     '''
