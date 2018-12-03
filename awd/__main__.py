@@ -93,27 +93,34 @@ def parse_args():
     layout_opts = parser.add_argument_group('layout options')
 
     layout_opts.add_argument(
-        '--row',
+        '--rows',
         type=int,
-        metavar='row',
+        metavar='rows',
         help='number of grid rows;',
     )
     layout_opts.add_argument(
-        '--col',
+        '--cols',
         type=int,
-        metavar='col',
+        metavar='cols',
         help='number of grid cols;',
     )
 
     args = parser.parse_args()
 
-    ##  check conflict options;
+    ##  check conflicting args;
     mutex = [ k for k in [
         'cascade', 'horizontal', 'vertical', 'left', 'right', 'top', 'bottom',
         'grid',
     ] if getattr(args, k, None) ]
     if len(mutex) > 1:
         die('confict options: ' + ', '.join(mutex))
+
+    ##  check missing args;
+    if args.grid:
+        if not args.rows:
+            die('no number of grid rows;')
+        if not args.cols:
+            die('no number of grid cols;')
 
     return args
 
@@ -155,7 +162,7 @@ def main():
     logging.d(windows)
 
     ##  layout windows;
-    layout_windows(windows, layout, row=args.row, col=args.col)
+    layout_windows(windows, layout, rows=args.rows, cols=args.cols)
 
 if __name__ == '__main__':
     main()

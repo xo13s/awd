@@ -41,7 +41,7 @@ def get_windows(excludes=None):
     desktop = ewmh.getCurrentDesktop()
 
     windows = []
-    for w in ewmh.getClientList():
+    for w in ewmh.getClientListStacking():
         w_type = ewmh.getWmWindowType(w, True)
         w_state = ewmh.getWmState(w, True)
         w_desktop = ewmh.getWmDesktop(w)
@@ -77,6 +77,7 @@ def place_window(window, x, y, w, h):
     ewmh.setWmState(window, 0, '_NET_WM_STATE_FULLSCREEN')
     l, r, t, b = ewmh.getFrameExtents(window) or (0, 0, 0, 0)
     ewmh.setMoveResizeWindow(window, 0, x + l, y + t, w - l - r, h - t - b)
+    ewmh.setActiveWindow(ewmh.getActiveWindow())
     ewmh.display.flush()
 
 def _layout_cascade(windows, **kwargs):
@@ -133,6 +134,7 @@ def _layout_left(windows, **kwargs):
     ewmh = _get_ewmh()
     desktop = ewmh.getCurrentDesktop()
     x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    windows = windows[::-1]
     n = len(windows)
 
     for window in windows[:1]:
@@ -150,6 +152,7 @@ def _layout_right(windows, **kwargs):
     ewmh = _get_ewmh()
     desktop = ewmh.getCurrentDesktop()
     x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    windows = windows[::-1]
     n = len(windows)
 
     for window in windows[:1]:
@@ -167,6 +170,7 @@ def _layout_top(windows, **kwargs):
     ewmh = _get_ewmh()
     desktop = ewmh.getCurrentDesktop()
     x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    windows = windows[::-1]
     n = len(windows)
 
     for window in windows[:1]:
@@ -184,6 +188,7 @@ def _layout_bottom(windows, **kwargs):
     ewmh = _get_ewmh()
     desktop = ewmh.getCurrentDesktop()
     x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    windows = windows[::-1]
     n = len(windows)
 
     for window in windows[:1]:
@@ -192,7 +197,7 @@ def _layout_bottom(windows, **kwargs):
         place_window(window, x, y, w // (n - 1), h // 2)
         x, y = x + w // (n - 1), y
 
-def _layout_grid(windows, row, col):
+def _layout_grid(windows, rows, cols):
 
     '''
     layout: grid;
@@ -206,10 +211,10 @@ def _layout_grid(windows, row, col):
     for i, window in enumerate(windows):
         place_window(
             window,
-            x + w // col * (i % col),
-            y + h // row * ((i // row) % row),
-            w // col,
-            h // row,
+            x + w // cols * (i % cols),
+            y + h // rows * ((i // rows) % rows),
+            w // cols,
+            h // rows,
         )
 
 def layout_windows(windows, layout, **kwargs):
