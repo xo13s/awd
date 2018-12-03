@@ -210,6 +210,9 @@ def place_window(window, x, y, w, h):
     '''
 
     ewmh = _get_ewmh()
+    ewmh.setWmState(window, 0, '_NET_WM_STATE_MAXIMIZED_HORZ')
+    ewmh.setWmState(window, 0, '_NET_WM_STATE_MAXIMIZED_VERT')
+    ewmh.setWmState(window, 0, '_NET_WM_STATE_FULLSCREEN')
     l, r, t, b = ewmh.getFrameExtents(window) or (0, 0, 0, 0)
     ewmh.setMoveResizeWindow(window, 0, x + l, y + t, w - l - r, h - t - b)
     ewmh.display.flush()
@@ -229,23 +232,20 @@ def _layout_cascade(windows):
         place_window(window, x, y, w // 2, h // 2)
         x, y = x + w // 2 // (n - 1), y + h // 2 // (n - 1)
 
-#    ngrid = 16  # Magic: Number of grids on each axis.
-#    nwin = 10   # Magic: Number of grids a window occupies on each axis.
-#
-#    xstep, ystep = workarea[2] // ngrid, workarea[3] // ngrid
-#
-#    x, y, w, h = xstep, ystep, nwin * xstep, nwin * ystep
-#    for window in _order_windows(windows, active_window):
-#        logging.d([window, x, y, w, h])
-#        _move_resize_window(window, x, y, w, h)
-#        set_active_window(window)
-#        if len(windows) == 1:
-#            break
-#        x += (ngrid - 2 - nwin) * xstep // (len(windows) - 1)
-#        y += (ngrid - 2 - nwin) * ystep // (len(windows) - 1)
-
 def _layout_horizontal(windows):
-    pass
+
+    '''
+    layout: horizontal;
+    '''
+
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
+
+    for window in windows:
+        place_window(window, x, y, w // n, h // 1)
+        x, y = x + w // (n - 1), y + h // (n - 1)
 
 def _layout_vertical(windows):
     pass
