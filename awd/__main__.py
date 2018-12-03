@@ -155,7 +155,7 @@ def main():
     logging.d(windows)
 
     ##  layout windows;
-    layout_windows(windows, layout)
+    layout_windows(windows, layout, row=args.row, col=args.col)
 
 if __name__ == '__main__':
     main()

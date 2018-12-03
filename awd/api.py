@@ -21,144 +21,6 @@ def _get_ewmh():
         ewmh = EWMH()
     return ewmh
 
-#def get_desktop_geometry():
-#    '''
-#    Get the common size of all desktops.
-#
-#    Returns
-#    -------
-#    list
-#        The common size of all desktops.
-#    '''
-#    ewmh = _get_ewmh()
-#    return list(ewmh.getDesktopGeometry())
-#
-#def get_desktop_viewport():
-#    '''
-#    Get the top left corner of each desktop's viewport.
-#
-#    Returns
-#    -------
-#    list
-#        The [top, left] corner of each desktop's viewport.
-#    '''
-#    ewmh = _get_ewmh()
-#    return list(ewmh.getDesktopViewPort())
-#
-#def get_current_desktop():
-#    '''
-#    Get the index of the current desktop.
-#
-#    Returns
-#    -------
-#    int
-#        The index of the current desktop.
-#    '''
-#    ewmh = _get_ewmh()
-#    return ewmh.getCurrentDesktop()
-#
-#def get_active_window():
-#    '''
-#    Get the active window.
-#
-#    Returns
-#    -------
-#    object
-#        The active window object.
-#    '''
-#    ewmh = _get_ewmh()
-#    return ewmh.getActiveWindow()
-#
-#def get_workarea():
-#    '''
-#    Get the work area.
-#
-#    Returns
-#    -------
-#    list
-#        The work area [x, y, w, h].
-#    '''
-#    ewmh = _get_ewmh()
-#    return list(ewmh.getWorkArea())
-#
-#def get_wm_name(window):
-#    '''
-#    Get name of the window.
-#
-#    Parameters
-#    ----------
-#    window : object
-#        A window object.
-#
-#    Returns
-#    -------
-#    str
-#        Name of the window.
-#    '''
-#    ewmh = _get_ewmh()
-#    return ewmh.getWmName(window).decode()
-#
-#def get_wm_desktop(window):
-#    '''
-#    Get the desktop the window is in.
-#
-#    Parameters
-#    ----------
-#    window : object
-#        A window object.
-#
-#    Returns
-#    -------
-#    int
-#        A desktop number.
-#    '''
-#    ewmh = _get_ewmh()
-#    return ewmh.getWmDesktop(window)
-#
-#def set_active_window(window):
-#    '''
-#    Set the active window.
-#
-#    Parameters
-#    ----------
-#    window : object
-#        A window object.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    ewmh = _get_ewmh()
-#    ewmh.setActiveWindow(window)
-#    ewmh.display.flush()
-#
-#def move_resize_window(window, x, y, w, h):
-#    '''
-#    Changes the size and location of the specified window.
-#
-#    Parameters
-#    ----------
-#    window
-#        A window object.
-#    x
-#        X coord.
-#    y
-#        Y coord.
-#    w
-#        Width.
-#    h
-#        Height.
-#
-#    Returns
-#    -------
-#    None
-#        None.
-#    '''
-#    ewmh = _get_ewmh()
-#    window.configure(x=x, y=y, width=w, height=h)
-#    ewmh.display.flush()
-
 def get_windows(excludes=None):
 
     '''
@@ -217,7 +79,7 @@ def place_window(window, x, y, w, h):
     ewmh.setMoveResizeWindow(window, 0, x + l, y + t, w - l - r, h - t - b)
     ewmh.display.flush()
 
-def _layout_cascade(windows):
+def _layout_cascade(windows, **kwargs):
 
     '''
     layout: cascade;
@@ -232,7 +94,7 @@ def _layout_cascade(windows):
         place_window(window, x, y, w // 2, h // 2)
         x, y = x + w // 2 // (n - 1), y + h // 2 // (n - 1)
 
-def _layout_horizontal(windows):
+def _layout_horizontal(windows, **kwargs):
 
     '''
     layout: horizontal;
@@ -244,28 +106,113 @@ def _layout_horizontal(windows):
     n = len(windows)
 
     for window in windows:
-        place_window(window, x, y, w // n, h // 1)
-        x, y = x + w // (n - 1), y + h // (n - 1)
+        place_window(window, x, y, w // n, h)
+        x, y = x + w // n, y
 
-def _layout_vertical(windows):
-    pass
+def _layout_vertical(windows, **kwargs):
 
-def _layout_left(windows):
-    pass
+    '''
+    layout: vertical;
+    '''
 
-def _layout_right(windows):
-    pass
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
 
-def _layout_top(windows):
-    pass
+    for window in windows:
+        place_window(window, x, y, w, h // n)
+        x, y = x, y + h // n
 
-def _layout_bottom(windows):
-    pass
+def _layout_left(windows, **kwargs):
 
-def _layout_grid(windows):
-    pass
+    '''
+    layout: left;
+    '''
 
-def layout_windows(windows, layout):
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
+
+    for window in windows[:1]:
+        place_window(window, x, y, w // 2, h)
+    for window in windows[1:]:
+        place_window(window, x + w // 2, y, w // 2, h // (n - 1))
+        x, y = x, y + h // (n - 1)
+
+def _layout_right(windows, **kwargs):
+
+    '''
+    layout: right;
+    '''
+
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
+
+    for window in windows[:1]:
+        place_window(window, x + w // 2, y, w // 2, h)
+    for window in windows[1:]:
+        place_window(window, x, y, w // 2, h // (n - 1))
+        x, y = x, y + h // (n - 1)
+
+def _layout_top(windows, **kwargs):
+
+    '''
+    layout: top;
+    '''
+
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
+
+    for window in windows[:1]:
+        place_window(window, x, y, w, h // 2)
+    for window in windows[1:]:
+        place_window(window, x, y + h // 2, w // (n - 1), h // 2)
+        x, y = x + w // (n - 1), y
+
+def _layout_bottom(windows, **kwargs):
+
+    '''
+    layout: bottom;
+    '''
+
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
+
+    for window in windows[:1]:
+        place_window(window, x, y + h // 2, w, h // 2)
+    for window in windows[1:]:
+        place_window(window, x, y, w // (n - 1), h // 2)
+        x, y = x + w // (n - 1), y
+
+def _layout_grid(windows, row, col):
+
+    '''
+    layout: grid;
+    '''
+
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
+
+    for i, window in enumerate(windows):
+        place_window(
+            window,
+            x + w // col * (i % col),
+            y + h // row * ((i // row) % row),
+            w // col,
+            h // row,
+        )
+
+def layout_windows(windows, layout, **kwargs):
 
     '''
     layout windows;
@@ -287,5 +234,5 @@ def layout_windows(windows, layout):
     if handler is None:
         die('invalid layout: {}'.format(layout))
 
-    handler(windows)
+    handler(windows, **kwargs)
 

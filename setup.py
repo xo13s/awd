@@ -49,7 +49,7 @@ setup(
     ##
     ##  <https://packaging.python.org/en/latest/single_source_version.html>
     ##
-    version='0.0.0',
+    version='1.0.0',
 
     ##  project homepage;
     ##
@@ -109,8 +109,8 @@ setup(
     ##
     classifiers=[
         ##  development status;
-        'Development Status :: 3 - Alpha',
-#        'Development Status :: 4 - Beta',
+#        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 #        'Development Status :: 5 - Production/Stable',
 
         ##  intended audience;
@@ -140,7 +140,7 @@ setup(
     ##
     ##  these keywords will appear on the project page;
     ##
-    keywords='window manager',
+    keywords='window layout',
 
     ##  package data;
     ##
@@ -173,7 +173,6 @@ setup(
     ##
     install_requires=[
         'argparse-ext',
-        'ewmh',
         'ewmh-ext',
         'logging-ext',
         'python-xlib',
