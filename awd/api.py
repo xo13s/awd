@@ -1,214 +1,291 @@
 #!/usr/bin/env python3
 
-'''xlib/ewmh api module;'''
+'''
+ewmh api module;
+'''
 
-from Xlib.display import Display
-from ewmh import EWMH
+from ewmh_ext import EWMH
+import logging_ext as logging
 
-# Display object.
-disp = None
-
-# EWMH object.
+##  ewmh object;
 ewmh = None
 
-def _get_display():
-    '''
-    Get the display object.
-
-    Returns
-    -------
-    object
-        The display object.
-    '''
-    global disp
-    if disp is None:
-        disp = Display()
-    return disp
-
 def _get_ewmh():
-    '''
-    Get the EWMH object.
 
-    Returns
-    -------
-    object
-        The EWMH object.
     '''
+    get the ewmh object;
+    '''
+
     global ewmh
     if ewmh is None:
         ewmh = EWMH()
     return ewmh
 
-def get_windows():
-    '''
-    Get all X Windows managed by the Window Manager.
+#def get_desktop_geometry():
+#    '''
+#    Get the common size of all desktops.
+#
+#    Returns
+#    -------
+#    list
+#        The common size of all desktops.
+#    '''
+#    ewmh = _get_ewmh()
+#    return list(ewmh.getDesktopGeometry())
+#
+#def get_desktop_viewport():
+#    '''
+#    Get the top left corner of each desktop's viewport.
+#
+#    Returns
+#    -------
+#    list
+#        The [top, left] corner of each desktop's viewport.
+#    '''
+#    ewmh = _get_ewmh()
+#    return list(ewmh.getDesktopViewPort())
+#
+#def get_current_desktop():
+#    '''
+#    Get the index of the current desktop.
+#
+#    Returns
+#    -------
+#    int
+#        The index of the current desktop.
+#    '''
+#    ewmh = _get_ewmh()
+#    return ewmh.getCurrentDesktop()
+#
+#def get_active_window():
+#    '''
+#    Get the active window.
+#
+#    Returns
+#    -------
+#    object
+#        The active window object.
+#    '''
+#    ewmh = _get_ewmh()
+#    return ewmh.getActiveWindow()
+#
+#def get_workarea():
+#    '''
+#    Get the work area.
+#
+#    Returns
+#    -------
+#    list
+#        The work area [x, y, w, h].
+#    '''
+#    ewmh = _get_ewmh()
+#    return list(ewmh.getWorkArea())
+#
+#def get_wm_name(window):
+#    '''
+#    Get name of the window.
+#
+#    Parameters
+#    ----------
+#    window : object
+#        A window object.
+#
+#    Returns
+#    -------
+#    str
+#        Name of the window.
+#    '''
+#    ewmh = _get_ewmh()
+#    return ewmh.getWmName(window).decode()
+#
+#def get_wm_desktop(window):
+#    '''
+#    Get the desktop the window is in.
+#
+#    Parameters
+#    ----------
+#    window : object
+#        A window object.
+#
+#    Returns
+#    -------
+#    int
+#        A desktop number.
+#    '''
+#    ewmh = _get_ewmh()
+#    return ewmh.getWmDesktop(window)
+#
+#def set_active_window(window):
+#    '''
+#    Set the active window.
+#
+#    Parameters
+#    ----------
+#    window : object
+#        A window object.
+#
+#    Returns
+#    -------
+#    None
+#        None.
+#    '''
+#    ewmh = _get_ewmh()
+#    ewmh.setActiveWindow(window)
+#    ewmh.display.flush()
+#
+#def move_resize_window(window, x, y, w, h):
+#    '''
+#    Changes the size and location of the specified window.
+#
+#    Parameters
+#    ----------
+#    window
+#        A window object.
+#    x
+#        X coord.
+#    y
+#        Y coord.
+#    w
+#        Width.
+#    h
+#        Height.
+#
+#    Returns
+#    -------
+#    None
+#        None.
+#    '''
+#    ewmh = _get_ewmh()
+#    window.configure(x=x, y=y, width=w, height=h)
+#    ewmh.display.flush()
 
-    Sticky windows are excluded.
+def get_windows(excludes=None):
 
-    Returns
-    -------
-    list
-        A list of windows managed by the Window Manager.
     '''
+    get windows in current desktop;
+
+    ## params
+
+    excludes:list
+    :   window name exclude pattern;
+
+    ## return
+
+    :list
+    :   a list of windows;
+    '''
+
     ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+
     windows = []
     for w in ewmh.getClientList():
-        wm_state = ewmh.getWmState(w, True)
-        if '_NET_WM_STATE_STICKY' not in wm_state:
-            windows.append(w)
+        w_type = ewmh.getWmWindowType(w, True)
+        w_state = ewmh.getWmState(w, True)
+        w_desktop = ewmh.getWmDesktop(w)
+        w_name = ewmh.getWmName(w)
+
+        if '_NET_WM_WINDOW_TYPE_DESKTOP' in w_type:
+            continue
+        elif '_NET_WM_WINDOW_TYPE_DOCK' in w_type:
+            continue
+
+        if '_NET_WM_STATE_STICKY' in w_state:
+            continue
+
+        if desktop != w_desktop:
+            continue
+
+        if excludes is not None:
+            if any((e in w_name for e in excludes)):
+                continue
+
+        windows.append(w)
     return windows
 
-def get_desktop_geometry():
-    '''
-    Get the common size of all desktops.
+def place_window(window, x, y, w, h):
 
-    Returns
-    -------
-    list
-        The common size of all desktops.
     '''
+    place a window; coords include borders;
+    '''
+
     ewmh = _get_ewmh()
-    return list(ewmh.getDesktopGeometry())
-
-def get_desktop_viewport():
-    '''
-    Get the top left corner of each desktop's viewport.
-
-    Returns
-    -------
-    list
-        The [top, left] corner of each desktop's viewport.
-    '''
-    ewmh = _get_ewmh()
-    return list(ewmh.getDesktopViewPort())
-
-def get_current_desktop():
-    '''
-    Get the index of the current desktop.
-
-    Returns
-    -------
-    int
-        The index of the current desktop.
-    '''
-    ewmh = _get_ewmh()
-    return ewmh.getCurrentDesktop()
-
-def get_active_window():
-    '''
-    Get the active window.
-
-    Returns
-    -------
-    object
-        The active window object.
-    '''
-    ewmh = _get_ewmh()
-    return ewmh.getActiveWindow()
-
-def get_workarea():
-    '''
-    Get the work area.
-
-    Returns
-    -------
-    list
-        The work area [x, y, w, h].
-    '''
-    ewmh = _get_ewmh()
-    return list(ewmh.getWorkArea())
-
-def get_wm_name(window):
-    '''
-    Get name of the window.
-
-    Parameters
-    ----------
-    window : object
-        A window object.
-
-    Returns
-    -------
-    str
-        Name of the window.
-    '''
-    ewmh = _get_ewmh()
-    return ewmh.getWmName(window).decode()
-
-def get_wm_desktop(window):
-    '''
-    Get the desktop the window is in.
-
-    Parameters
-    ----------
-    window : object
-        A window object.
-
-    Returns
-    -------
-    int
-        A desktop number.
-    '''
-    ewmh = _get_ewmh()
-    return ewmh.getWmDesktop(window)
-
-def set_active_window(window):
-    '''
-    Set the active window.
-
-    Parameters
-    ----------
-    window : object
-        A window object.
-
-    Returns
-    -------
-    None
-        None.
-    '''
-    ewmh = _get_ewmh()
-    ewmh.setActiveWindow(window)
+    l, r, t, b = ewmh.getFrameExtents(window) or (0, 0, 0, 0)
+    ewmh.setMoveResizeWindow(window, 0, x + l, y + t, w - l - r, h - t - b)
     ewmh.display.flush()
 
-def move_resize_window(window, x, y, w, h):
+def _layout_cascade(windows):
+
     '''
-    Changes the size and location of the specified window.
-
-    Parameters
-    ----------
-    window
-        A window object.
-    x
-        X coord.
-    y
-        Y coord.
-    w
-        Width.
-    h
-        Height.
-
-    Returns
-    -------
-    None
-        None.
+    layout: cascade;
     '''
-    disp = _get_display()
-    window.configure(x=x, y=y, width=w, height=h)
-    disp.flush()
 
-def layout_windows(windows, layout, win_active):
+    ewmh = _get_ewmh()
+    desktop = ewmh.getCurrentDesktop()
+    x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
+    n = len(windows)
+
+    for window in windows:
+        place_window(window, x, y, w // 2, h // 2)
+        x, y = x + w // 2 // (n - 1), y + h // 2 // (n - 1)
+
+#    ngrid = 16  # Magic: Number of grids on each axis.
+#    nwin = 10   # Magic: Number of grids a window occupies on each axis.
+#
+#    xstep, ystep = workarea[2] // ngrid, workarea[3] // ngrid
+#
+#    x, y, w, h = xstep, ystep, nwin * xstep, nwin * ystep
+#    for window in _order_windows(windows, active_window):
+#        logging.d([window, x, y, w, h])
+#        _move_resize_window(window, x, y, w, h)
+#        set_active_window(window)
+#        if len(windows) == 1:
+#            break
+#        x += (ngrid - 2 - nwin) * xstep // (len(windows) - 1)
+#        y += (ngrid - 2 - nwin) * ystep // (len(windows) - 1)
+
+def _layout_horizontal(windows):
+    pass
+
+def _layout_vertical(windows):
+    pass
+
+def _layout_left(windows):
+    pass
+
+def _layout_right(windows):
+    pass
+
+def _layout_top(windows):
+    pass
+
+def _layout_bottom(windows):
+    pass
+
+def _layout_grid(windows):
+    pass
+
+def layout_windows(windows, layout):
 
     '''
     layout windows;
     '''
 
-    pass
+    handlers = {
+        'cascade'   : _layout_cascade,
+        'horizontal': _layout_horizontal,
+        'vertical'  : _layout_vertical,
+        'left'      : _layout_left,
+        'right'     : _layout_right,
+        'top'       : _layout_top,
+        'bottom'    : _layout_bottom,
+        'grid'      : _layout_grid,
+    }
 
-def filter_windows(windows, exclude):
+    handler = handlers.get(layout)
 
-    '''
-    filter windows;
-    '''
+    if handler is None:
+        die('invalid layout: {}'.format(layout))
 
-    pass
+    handler(windows)
 

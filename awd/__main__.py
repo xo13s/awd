@@ -1,82 +1,20 @@
 #!/usr/bin/env python3
 
 '''
-A wacky manager of window manager.
+main module;
 '''
 
-from traceback import print_exc
 import argparse
 import argparse_ext
 import logging_ext as logging
 import sys
 
-from awd.api import get_active_window
-from awd.api import get_current_desktop
-from awd.api import get_desktop_viewport
 from awd.api import get_windows
-from awd.api import get_wm_desktop
-from awd.api import get_wm_name
 from awd.api import layout_windows
-from awd.api import set_active_window
 from awd.util import die
-from awd.util import is_window_in_viewport
 
 ##  program name;
 prog = 'awd'
-
-def filter_windows(windows, desktop, viewport, excludes):
-    '''
-    Filter out windows which are not in the desktop or not in the viewport.
-
-    Parameters
-    ----------
-    windows : list
-        A list of windows.
-    desktop : int
-        A desktop number.
-    viewport : list
-        A viewport.
-    excludes : list
-        A list of window name exclude patterns.
-
-    Returns
-    -------
-    list
-        A list of windows that pass the filter.
-    '''
-    ans = []
-    for window in windows:
-
-        # Filter by desktop.
-        if get_wm_desktop(window) != desktop:
-            continue
-
-        # Filter by viewport.
-        if not is_window_in_viewport(window, viewport):
-            continue
-
-        # Filter by window name.
-        wm_name = get_wm_name(window)
-        if any([x in wm_name for x in excludes]):
-            continue
-
-        ans.append(window)
-    return ans
-
-def layout_windows(windows, layout, active_window):
-    '''
-    Layout windows.
-
-    Parameters
-    ----------
-    windows : list
-        A list of windows.
-    layout : str
-        Layout name.
-    active_window : object
-        The active window object.
-    '''
-    LAYOUT_HANDLERZ[layout](windows, active_window)
 
 def parse_args():
 
@@ -106,7 +44,7 @@ def parse_args():
         action='append',
         default=[],
         metavar='pattern',
-        help='excluded window names;',
+        help='excluded window name pattern;',
     )
 
     layouts = parser.add_argument_group('layouts')
@@ -169,13 +107,13 @@ def parse_args():
 
     args = parser.parse_args()
 
-    ##  check conflicts;
+    ##  check conflict options;
     mutex = [ k for k in [
         'cascade', 'horizontal', 'vertical', 'left', 'right', 'top', 'bottom',
         'grid',
-    ] if getattr(args, k, False) ]
+    ] if getattr(args, k, None) ]
     if len(mutex) > 1:
-        die('layout confict: ' + ', '.join(mutex))
+        die('confict options: ' + ', '.join(mutex))
 
     return args
 
@@ -212,34 +150,12 @@ def main():
     else:
         die('no window layout;')
 
-    ##  get exclude pattern;
-    exclude = args.exclude
+    ##  get windows in current desktop;
+    windows = get_windows(excludes=args.exclude)
+    logging.d(windows)
 
-#    # Get all windows managed by WM.
-#    windows = get_windows()
-#    logger.d('all windows %s', windows)
-#
-#    # Get current active window.
-#    active_window = get_active_window()
-#    logger.d('active_window %s', active_window)
-#
-#    # Get current desktop.
-#    desktop = get_current_desktop()
-#    logger.d('current desktop %s', desktop)
-#
-#    # Get current viewport.
-#    viewport = get_desktop_viewport()
-#    logger.d('current viewport %s', viewport)
-#
-#    # Filter windows by desktop and viewport.
-#    windows = filter_windows(windows, desktop, viewport, exclude)
-#    logger.d('filtered windows %s', windows)
-#
-#    # Layout windows.
-#    layout_windows(windows, layout_name, active_window)
-#
-#    # Activate the original active window.
-#    set_active_window(active_window)
+    ##  layout windows;
+    layout_windows(windows, layout)
 
 if __name__ == '__main__':
     main()

@@ -174,6 +174,7 @@ setup(
     install_requires=[
         'argparse-ext',
         'ewmh',
+        'ewmh-ext',
         'logging-ext',
         'python-xlib',
     ],
