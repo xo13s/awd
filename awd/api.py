@@ -100,6 +100,7 @@ def _layout_cascade(windows, **kwargs):
 
     for window in windows:
         place_window(window, x, y, w // 2, h // 2)
+        if n < 2: break
         x, y = x + w // 2 // (n - 1), y + h // 2 // (n - 1)
 
 def _layout_horizontal(windows, **kwargs):
