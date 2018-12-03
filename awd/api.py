@@ -5,7 +5,6 @@ ewmh api module;
 '''
 
 from ewmh_ext import EWMH
-import logging_ext as logging
 
 ##  ewmh object;
 ewmh = None
@@ -25,6 +24,8 @@ def get_windows(excludes=None):
 
     '''
     get windows in current desktop;
+
+    exclude certain windows based on their types, states, etc.;
 
     ## params
 
@@ -52,7 +53,9 @@ def get_windows(excludes=None):
         elif '_NET_WM_WINDOW_TYPE_DOCK' in w_type:
             continue
 
-        if '_NET_WM_STATE_STICKY' in w_state:
+        if '_NET_WM_STATE_HIDDEN' in w_state:
+            continue
+        elif '_NET_WM_STATE_STICKY' in w_state:
             continue
 
         if desktop != w_desktop:
@@ -76,7 +79,11 @@ def place_window(window, x, y, w, h):
     ewmh.setWmState(window, 0, '_NET_WM_STATE_MAXIMIZED_VERT')
     ewmh.setWmState(window, 0, '_NET_WM_STATE_FULLSCREEN')
     l, r, t, b = ewmh.getFrameExtents(window) or (0, 0, 0, 0)
-    ewmh.setMoveResizeWindow(window, 0, x + l, y + t, w - l - r, h - t - b)
+
+    ##  `ewmh.setMoveResizeWindow` works inconsistently across different window
+    ##  managers; so we directly call x method to move and resize window;
+    window.configure(x=x, y=y, width=(w - l - r), height=(h - t - b))
+
     ewmh.setActiveWindow(ewmh.getActiveWindow())
     ewmh.display.flush()
 
@@ -206,7 +213,6 @@ def _layout_grid(windows, rows, cols):
     ewmh = _get_ewmh()
     desktop = ewmh.getCurrentDesktop()
     x, y, w, h = ewmh.getWorkArea()[4 * desktop:4 * (desktop + 1)]
-    n = len(windows)
 
     for i, window in enumerate(windows):
         place_window(
@@ -237,7 +243,7 @@ def layout_windows(windows, layout, **kwargs):
     handler = handlers.get(layout)
 
     if handler is None:
-        die('invalid layout: {}'.format(layout))
+        raise Exception('invalid layout: {}'.format(layout))
 
     handler(windows, **kwargs)
 

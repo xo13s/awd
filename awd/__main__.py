@@ -7,11 +7,9 @@ main module;
 import argparse
 import argparse_ext
 import logging_ext as logging
-import sys
 
 from awd.api import get_windows
 from awd.api import layout_windows
-from awd.util import die
 
 ##  program name;
 prog = 'awd'
@@ -108,19 +106,21 @@ def parse_args():
     args = parser.parse_args()
 
     ##  check conflicting args;
-    mutex = [ k for k in [
-        'cascade', 'horizontal', 'vertical', 'left', 'right', 'top', 'bottom',
-        'grid',
-    ] if getattr(args, k, None) ]
+    mutex = [
+        k for k in [
+            'cascade', 'horizontal', 'vertical', 'left', 'right', 'top',
+            'bottom', 'grid',
+        ] if getattr(args, k, None)
+    ]
     if len(mutex) > 1:
-        die('confict options: ' + ', '.join(mutex))
+        raise Exception('confict options: ' + ', '.join(mutex))
 
     ##  check missing args;
     if args.grid:
         if not args.rows:
-            die('no number of grid rows;')
+            raise Exception('no number of grid rows;')
         if not args.cols:
-            die('no number of grid cols;')
+            raise Exception('no number of grid cols;')
 
     return args
 
@@ -155,7 +155,7 @@ def main():
     elif args.grid:
         layout = 'grid'
     else:
-        die('no window layout;')
+        raise Exception('no window layout;')
 
     ##  get windows in current desktop;
     windows = get_windows(excludes=args.exclude)
