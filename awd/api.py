@@ -212,7 +212,7 @@ def _layout_grid(windows, rows, cols):
         place_window(
             window,
             x + w // cols * (i % cols),
-            y + h // rows * ((i // rows) % rows),
+            y + h // rows * ((i // cols) % rows),
             w // cols,
             h // rows,
         )
