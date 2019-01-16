@@ -6,13 +6,19 @@ main module;
 
 import argparse
 import argparse_ext
-import logging_ext as logging
+import logging
+import logging_ext
 
 from awd.api import get_windows
 from awd.api import layout_windows
 
 ##  program name;
 prog = 'awd'
+
+##  logger;
+logger = logging_ext.getLogger(__name__)
+handler = logging.StreamHandler()
+logger.addHandler(handler)
 
 def parse_args():
 
@@ -135,7 +141,7 @@ def main():
 
     ##  enable debug mode;
     if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
+        logger.setLevel(logging_ext.DEBUG)
 
     ##  get layout;
     if args.cascade:
@@ -159,7 +165,7 @@ def main():
 
     ##  get windows in current desktop;
     windows = get_windows(excludes=args.exclude)
-    logging.d(windows)
+    logger.d(windows)
 
     ##  layout windows;
     layout_windows(windows, layout, rows=args.rows, cols=args.cols)
